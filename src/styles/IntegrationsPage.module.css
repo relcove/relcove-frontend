@@ -1,0 +1,183 @@
+/* IntegrationsPage CSS Module */
+
+.integrationsPage {
+  padding: 0;
+  background: transparent;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--ant-color-border-secondary);
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  margin: 0 0 8px 0 !important;
+  color: var(--ant-color-text);
+  font-weight: var(--ant-font-weight-semibold);
+}
+
+.subtitle {
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-base);
+  line-height: var(--ant-line-height-normal);
+}
+
+.addButton {
+  height: 40px;
+  border-radius: var(--ant-border-radius);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.content {
+  padding: 0;
+}
+
+.categorySection {
+  margin-bottom: 48px;
+}
+
+.categoryTitle {
+  margin: 0 0 24px 0 !important;
+  color: var(--ant-color-text);
+  font-weight: var(--ant-font-weight-semibold);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ant-color-primary);
+  display: inline-block;
+}
+
+.integrationCard {
+  height: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--ant-color-border-secondary);
+  background: #ffffff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.integrationCard:hover {
+  border-color: var(--ant-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.connectedCard {
+  border-color: var(--ant-color-success);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 1px var(--ant-color-success);
+}
+
+.cardContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.iconContainer {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ant-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.statusContainer {
+  flex-shrink: 0;
+}
+
+.cardBody {
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.integrationName {
+  margin: 0 0 8px 0 !important;
+  color: var(--ant-color-text);
+  font-weight: var(--ant-font-weight-semibold);
+}
+
+.integrationDescription {
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-sm);
+  line-height: var(--ant-line-height-normal);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardFooter {
+  margin-top: auto;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.featureTag {
+  background: var(--ant-color-fill-secondary);
+  color: var(--ant-color-text-secondary);
+  padding: 2px 8px;
+  border-radius: var(--ant-border-radius-sm);
+  font-size: var(--ant-font-size-xs);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.actionButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.connectButton {
+  border-radius: var(--ant-border-radius);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.configureButton {
+  color: var(--ant-color-primary);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.configureButton:hover {
+  color: var(--ant-color-primary-hover);
+  background: var(--ant-color-primary-bg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .addButton {
+    align-self: flex-start;
+  }
+  
+  .categorySection {
+    margin-bottom: 32px;
+  }
+}

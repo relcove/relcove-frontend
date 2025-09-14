@@ -1,0 +1,98 @@
+/* SidebarMenu CSS Module */
+
+.sidebarMenu {
+  width: 100%;
+}
+
+.menuItem {
+  width: 100% !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border-right: 3px solid transparent !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.menuItemExpanded {
+  padding: 12px 20px !important;
+  justify-content: flex-start !important;
+}
+
+.menuItemCollapsed {
+  text-align: center !important;
+}
+
+/* Target Ant Design's internal structure for collapsed state */
+.menuItemCollapsed .ant-menu-item-icon {
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.menuItemCollapsed .ant-menu-title-content {
+  display: none !important;
+}
+
+.menuItem:hover {
+  background-color: var(--ant-color-primary-bg) !important;
+  color: var(--ant-color-primary) !important;
+  border-right-color: var(--ant-color-primary) !important;
+}
+
+.menuItemSelected {
+  background-color: var(--ant-color-primary-bg) !important;
+  color: var(--ant-color-primary) !important;
+  border-right-color: var(--ant-color-primary) !important;
+}
+
+.menuItemSelected:hover {
+  background-color: var(--ant-color-primary-bg-hover) !important;
+  color: var(--ant-color-primary) !important;
+}
+
+.menuIcon {
+  font-size: 16px !important;
+}
+
+.menuIconCollapsed {
+  margin-right: 0px !important;
+  font-size: 18px !important;
+}
+
+.menuIconExpanded {
+  margin-right: 12px !important;
+}
+
+.menuTitleContent {
+  display: block !important;
+}
+
+.menuTitleContentHidden {
+  display: none !important;
+}
+
+.menu {
+  background: transparent;
+  border: none;
+  width: 100%;
+}
+
+/* Ensure menu items are properly centered when collapsed */
+.menu .ant-menu-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.menu .ant-menu-item.menuItemCollapsed {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.menu .ant-menu-item.menuItemCollapsed > * {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}

@@ -1,0 +1,340 @@
+/* IntegrationSetupPage CSS Module */
+
+.setupPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0;
+  background: transparent;
+}
+
+/* Top Section - Back Button */
+.topSection {
+  padding: 24px 0 0 0;
+  flex-shrink: 0;
+}
+
+.backButton {
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-sm);
+  padding: 4px 8px;
+  height: auto;
+  border: none;
+  box-shadow: none;
+}
+
+.backButton:hover {
+  color: var(--ant-color-primary);
+  background: var(--ant-color-primary-bg);
+}
+
+/* Middle Section - Main Content */
+.middleSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: 100px; /* Space for sticky bottom section */
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.title {
+  margin: 0 0 8px 0 !important;
+  color: var(--ant-color-text);
+  font-weight: var(--ant-font-weight-semibold);
+}
+
+.subtitle {
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-base);
+  line-height: var(--ant-line-height-normal);
+}
+
+.timelineContainer {
+  width: 300px;
+  flex-shrink: 0;
+  padding-right: 32px;
+}
+
+.steps {
+  margin-bottom: 0;
+}
+
+.steps .ant-steps-item {
+  margin-bottom: 0;
+  padding-bottom: 16px;
+}
+
+.steps .ant-steps-item-title {
+  font-size: var(--ant-font-size-base);
+  line-height: var(--ant-line-height-normal);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.steps .ant-steps-item-description {
+  font-size: var(--ant-font-size-sm);
+  color: var(--ant-color-text-secondary);
+  margin-top: 4px;
+  line-height: var(--ant-line-height-normal);
+}
+
+.steps .ant-steps-item-icon {
+  margin-right: 16px;
+}
+
+.steps .ant-steps-item-content {
+  margin-top: 0;
+}
+
+.contentLayout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.setupCard {
+  border-radius: var(--ant-border-radius-lg);
+  border: 1px solid var(--ant-color-border-secondary);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 0px 20px;
+  flex: 1;
+  min-height: 400px;
+}
+
+.stepContainer {
+  min-height: 300px;
+}
+
+.stepContent {
+  padding: 0;
+}
+
+.instructionsSection {
+  margin-bottom: 24px;
+}
+
+.instructionsList {
+  margin: 16px 0 0 0;
+  padding-left: 20px;
+}
+
+.instructionItem {
+  margin-bottom: 8px;
+  color: var(--ant-color-text);
+  line-height: var(--ant-line-height-normal);
+}
+
+.configSection {
+  margin-top: 24px;
+}
+
+.form {
+  margin-top: 16px;
+}
+
+.formItem {
+  margin-bottom: 24px;
+}
+
+.input {
+  border-radius: var(--ant-border-radius);
+  max-width: 500px;
+}
+
+.textArea {
+  border-radius: var(--ant-border-radius);
+  max-width: 500px;
+}
+
+.fieldDescription {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--ant-font-size-xs);
+  line-height: var(--ant-line-height-normal);
+}
+
+.eyeButton {
+  color: var(--ant-color-text-tertiary);
+  border: none;
+  box-shadow: none;
+}
+
+.eyeButton:hover {
+  color: var(--ant-color-text-secondary);
+}
+
+.permissionsCard {
+  border-radius: var(--ant-border-radius);
+  border: 1px solid var(--ant-color-border-secondary);
+}
+
+.permissionsList {
+  width: 100%;
+}
+
+.permissionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.permissionIcon {
+  color: var(--ant-color-success);
+  flex-shrink: 0;
+}
+
+.alert {
+  margin-top: 16px;
+  border-radius: var(--ant-border-radius);
+}
+
+.testSection {
+  text-align: center;
+}
+
+.testCard {
+  border-radius: var(--ant-border-radius);
+  border: 1px solid var(--ant-color-border-secondary);
+  background: var(--ant-color-fill-quaternary);
+}
+
+.testContent {
+  width: 100%;
+  text-align: center;
+}
+
+.testStatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.successIcon {
+  color: var(--ant-color-success);
+}
+
+/* Bottom Section - Navigation Buttons */
+.bottomSection {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  background: #ffffff;
+  border-top: 1px solid var(--ant-color-border-secondary);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.bottomSectionContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.footerLeft {
+  flex: 1;
+}
+
+.footerRight {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancelButton {
+  color: var(--ant-color-text-secondary);
+  border: 1px solid var(--ant-color-border-secondary);
+  background: #ffffff;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--ant-border-radius);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.cancelButton:hover {
+  color: var(--ant-color-text);
+  border-color: var(--ant-color-border);
+  background: var(--ant-color-bg-layout);
+}
+
+.prevButton {
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--ant-border-radius);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+.nextButton,
+.connectButton {
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--ant-border-radius);
+  font-weight: var(--ant-font-weight-medium);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contentLayout {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .timelineContainer {
+    width: 100%;
+    padding-right: 0;
+  }
+  
+  .setupCard {
+    padding: 24px;
+    min-height: auto;
+  }
+  
+  .stepContent {
+    padding: 0;
+  }
+  
+  .instructionsList {
+    padding-left: 16px;
+  }
+  
+  .input,
+  .textArea {
+    max-width: 100%;
+  }
+  
+  .bottomSection {
+    padding: 12px 16px;
+  }
+  
+  .bottomSectionContent {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footerLeft,
+  .footerRight {
+    flex: none;
+    width: 100%;
+  }
+  
+  .cancelButton,
+  .prevButton,
+  .nextButton,
+  .connectButton {
+    margin: 0;
+    width: 100%;
+  }
+}

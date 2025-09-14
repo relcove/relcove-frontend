@@ -1,0 +1,143 @@
+/* ConfigurationOverviewDrawer CSS Module */
+
+.drawer {
+  border-radius: var(--ant-border-radius-lg);
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.drawerIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ant-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.drawerTitle {
+  flex: 1;
+}
+
+.title {
+  margin: 0 !important;
+  color: var(--ant-color-text);
+  font-weight: var(--ant-font-weight-semibold);
+}
+
+.subtitle {
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-sm);
+  line-height: var(--ant-line-height-normal);
+}
+
+.drawerContent {
+  padding: 0;
+}
+
+.drawerFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.closeButton {
+  margin-right: auto;
+}
+
+.addButton {
+  margin-left: auto;
+}
+
+.configTable {
+  margin-top: 16px;
+}
+
+.configName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exportingTo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.serviceIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--ant-border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.clusterTag {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clusterTag:hover {
+  opacity: 0.8;
+}
+
+.lastSync {
+  font-size: var(--ant-font-size-xs);
+}
+
+.moreButton {
+  color: var(--ant-color-text-tertiary);
+  border: none;
+  box-shadow: none;
+}
+
+.moreButton:hover {
+  color: var(--ant-color-text-secondary);
+  background: var(--ant-color-fill-secondary);
+}
+
+.emptyState {
+  text-align: center;
+}
+
+.emptySubtext {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--ant-font-size-sm);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .drawerHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .drawerIcon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .drawerFooter {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .closeButton,
+  .addButton {
+    margin: 0;
+    width: 100%;
+  }
+}
