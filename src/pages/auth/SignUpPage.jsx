@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Typography, theme } from "antd";
-import { SignIn } from "@clerk/clerk-react";
+import { Row, Col, Typography, theme } from "antd";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DefaultLoader from "../../components/DefaultLoader";
+import { SignUp } from "@clerk/clerk-react";
 
 const { Text } = Typography;
 const { useToken } = theme;
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const { token } = useToken();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,14 +43,14 @@ export default function LoginPage() {
           marginBottom: "24px",
         }}
       >
-        <SignIn
+        <SignUp
           routing="path"
-          path="/login"
-          afterSignInUrl="/"
+          path="/signup"
+          afterSignUpUrl="/"
         />
       </div>
 
-      {/* Signup Link */}
+      {/* Login Link */}
       <div
         style={{
           textAlign: "center",
@@ -63,16 +63,16 @@ export default function LoginPage() {
             fontFamily: token.fontFamily,
           }}
         >
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link
-            to="/signup"
+            to="/login"
             style={{
               color: token.colorPrimary,
               textDecoration: "none",
               fontWeight: token.fontWeightMedium,
             }}
           >
-            Sign up
+            Sign in
           </Link>
         </Text>
       </div>

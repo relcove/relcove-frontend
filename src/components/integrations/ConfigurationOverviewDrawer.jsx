@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Drawer, 
   Typography, 
-  Button, 
   Table, 
   Space, 
   Dropdown, 
@@ -17,10 +15,12 @@ import {
   Trash2, 
   ExternalLink,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Settings
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../styles/ConfigurationOverviewDrawer.module.css';
+import GeneralDrawer from '../GeneralDrawer';
+import { CancelButton, SaveButton } from '../StandardButtons';
 
 const { Title, Text } = Typography;
 
@@ -114,8 +114,8 @@ const ConfigurationOverviewDrawer = ({ integration, visible, onClose }) => {
       dataIndex: 'name',
       key: 'name',
       render: (text, record) => (
-        <div className={styles.configName}>
-          <Text strong>{text}</Text>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Text strong style={{ fontSize: token.fontSizeSM }}>{text}</Text>
           {getStatusTag(record.status)}
         </div>
       )
@@ -128,7 +128,7 @@ const ConfigurationOverviewDrawer = ({ integration, visible, onClose }) => {
       render: (text) => (
         <Tag 
           color="blue" 
-          className={styles.clusterTag}
+          style={{ cursor: 'pointer' }}
           onClick={() => navigate(`/clusters/${text}`)}
         >
           {text}
@@ -140,7 +140,10 @@ const ConfigurationOverviewDrawer = ({ integration, visible, onClose }) => {
       dataIndex: 'lastSync',
       key: 'lastSync',
       render: (text) => (
-        <Text type="secondary" className={styles.lastSync}>
+        <Text style={{ 
+          fontSize: token.fontSizeSM, 
+          color: token.colorTextSecondary 
+        }}>
           {formatLastSync(text)}
         </Text>
       )
@@ -155,89 +158,92 @@ const ConfigurationOverviewDrawer = ({ integration, visible, onClose }) => {
           trigger={['click']}
           placement="bottomRight"
         >
-          <Button 
-            type="text" 
-            icon={<MoreHorizontal size={16} />}
-            className={styles.moreButton}
-          />
+          <div style={{ 
+            cursor: 'pointer', 
+            padding: '4px',
+            borderRadius: token.borderRadius,
+            color: token.colorTextSecondary
+          }}>
+            <MoreHorizontal size={16} />
+          </div>
         </Dropdown>
       )
     }
   ];
 
+  const footer = (
+    <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+      <CancelButton onClick={onClose} />
+      <SaveButton 
+        icon={<Plus size={14} />}
+        onClick={handleAddConfiguration}
+      >
+        Add {integration?.name} Configuration
+      </SaveButton>
+    </Space>
+  );
+
   return (
-    <Drawer
-      title={
-        <div className={styles.drawerHeader}>
-          <div 
-            className={styles.drawerIcon}
-            style={{ backgroundColor: integration?.color }}
-          >
-            {integration?.icon}
-          </div>
-          <div className={styles.drawerTitle}>
-            <Title level={4} className={styles.title}>
-              {integration?.name} Configurations
-            </Title>
-            <Text type="secondary" className={styles.subtitle}>
-              Manage your {integration?.name} integration settings
-            </Text>
-          </div>
-        </div>
-      }
+    <GeneralDrawer
       open={visible}
       onClose={onClose}
-      width={800}
-      className={styles.drawer}
-      footer={
-        <div className={styles.drawerFooter}>
-          <Button onClick={onClose} className={styles.closeButton}>
-            Close
-          </Button>
-          <Button 
-            type="primary" 
-            icon={<Plus size={16} />}
-            onClick={handleAddConfiguration}
-            className={styles.addButton}
-          >
-            Add {integration?.name} Configuration
-          </Button>
-        </div>
-      }
+      title={`${integration?.name} Configurations`}
+      icon={<Settings size={16} color="white" />}
+      footer={footer}
+      width="min(800px, 100%)"
     >
-      <div className={styles.drawerContent}>
-        {configurations.length > 0 ? (
-          <Table
-            columns={columns}
-            dataSource={configurations}
-            rowKey="id"
-            pagination={false}
-            className={styles.configTable}
-            size="middle"
-          />
-        ) : (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={
-              <div className={styles.emptyState}>
-                <Text type="secondary">No configurations found</Text>
-                <Text type="secondary" className={styles.emptySubtext}>
-                  Create your first {integration?.name} configuration to get started
-                </Text>
-              </div>
-            }
-          >
-            <Button 
-              type="primary" 
-              icon={<Plus size={16} />}
-              onClick={handleAddConfiguration}
-            >
-              Add Configuration
-            </Button>
-          </Empty>
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <Text style={{ 
+          fontSize: token.fontSizeSM, 
+          color: token.colorTextSecondary,
+          lineHeight: '1.5'
+        }}>
+          Manage your {integration?.name} integration settings and configurations
+        </Text>
       </div>
-    </Drawer>
+
+      {configurations.length > 0 ? (
+        <Table
+          columns={columns}
+          dataSource={configurations}
+          rowKey="id"
+          pagination={false}
+          size="middle"
+          style={{
+            backgroundColor: token.colorBgContainer,
+            borderRadius: token.borderRadiusLG
+          }}
+        />
+      ) : (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={
+            <div style={{ textAlign: 'center' }}>
+              <Text style={{ 
+                fontSize: token.fontSizeSM, 
+                color: token.colorTextSecondary 
+              }}>
+                No configurations found
+              </Text>
+              <br />
+              <Text style={{ 
+                fontSize: token.fontSizeXS, 
+                color: token.colorTextTertiary 
+              }}>
+                Create your first {integration?.name} configuration to get started
+              </Text>
+            </div>
+          }
+        >
+          <SaveButton 
+            icon={<Plus size={14} />}
+            onClick={handleAddConfiguration}
+          >
+            Add Configuration
+          </SaveButton>
+        </Empty>
+      )}
+    </GeneralDrawer>
   );
 };
 

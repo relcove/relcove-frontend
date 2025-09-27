@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, theme } from "antd";
-import { Home, Settings, Zap } from "lucide-react";
+import { Home, Settings, Zap, Rocket } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/SidebarMenu.module.css";
 
@@ -20,15 +20,20 @@ const SidebarMenu = ({ collapsed }) => {
       label: "Overview",
     },
     {
+      key: "/releases",
+      icon: <Rocket size={16} />,
+      label: "Releases",
+    },
+    {
       key: "/integrations",
       icon: <Zap size={16} />,
       label: "Integrations",
     },
-    {
-      key: "/admin",
-      icon: <Settings size={16} />,
-      label: "Admin Panel",
-    },
+    // {
+    //   key: "/admin",
+    //   icon: <Settings size={16} />,
+    //   label: "Admin Panel",
+    // },
   ];
 
   return (

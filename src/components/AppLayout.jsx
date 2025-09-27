@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Layout, Avatar, Typography, Button, Space, theme } from "antd";
+import {
+  Layout,
+  Avatar,
+  Typography,
+  Button,
+  Space,
+  theme,
+  Row,
+  Col,
+} from "antd";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
+import { UserButton, useUser, OrganizationSwitcher } from "@clerk/clerk-react";
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -9,9 +19,14 @@ const { useToken } = theme;
 
 const AppLayout = ({ children }) => {
   const { token } = useToken();
+  const { user } = useUser();
   const [collapsed, setCollapsed] = useState(
     localStorage.getItem("siderCollapsed") === "true"
   );
+
+  // Check if user has organization membership
+  const hasOrganization = user?.organizationMemberships?.length > 0;
+  const shouldShowSidebar = hasOrganization;
 
   const handleSiderCollapse = () => {
     const newCollapsedState = !collapsed;
@@ -44,7 +59,7 @@ const AppLayout = ({ children }) => {
         width={200}
         collapsedWidth={80}
       >
-        {/* Z Logo */}
+        {/* R Logo */}
         <div
           style={{
             marginTop: "20px",
@@ -70,7 +85,7 @@ const AppLayout = ({ children }) => {
               transition: "all 0.2s ease",
             }}
           >
-            Z
+            R
           </div>
           {!collapsed && (
             <Title
@@ -82,7 +97,7 @@ const AppLayout = ({ children }) => {
                 fontWeight: token.fontWeightSemiBold,
               }}
             >
-              Zentra
+              Relcove
             </Title>
           )}
         </div>
@@ -97,10 +112,12 @@ const AppLayout = ({ children }) => {
             justifyContent: "space-between",
           }}
         >
-          {/* Navigation Menu */}
-          <div style={{ padding: "0" }}>
-            <SidebarMenu collapsed={collapsed} />
-          </div>
+          {/* Navigation Menu - Only show if user has organization membership */}
+          {shouldShowSidebar && (
+            <div style={{ padding: "0" }}>
+              <SidebarMenu collapsed={collapsed} />
+            </div>
+          )}
 
           {/* Collapse Button */}
           <div
@@ -151,7 +168,7 @@ const AppLayout = ({ children }) => {
         {/* Top Header Bar */}
         <Header
           style={{
-            background: 'white',
+            background: "white",
             padding: "0 24px",
             height: "64px",
             lineHeight: "64px",
@@ -168,8 +185,7 @@ const AppLayout = ({ children }) => {
             transition: "left 0.2s ease",
           }}
         >
-          {/* Company Name */}
-          <div>
+          <Col>
             <Title
               level={3}
               style={{
@@ -179,23 +195,13 @@ const AppLayout = ({ children }) => {
                 fontWeight: token.fontWeightSemiBold,
               }}
             >
-              Zentra
+              Relcove
             </Title>
-          </div>
-
-          {/* Right side - Avatar */}
-          <Space>
-            <Avatar
-              size="small"
-              style={{
-                backgroundColor: token.colorError,
-                color: "white",
-                fontWeight: token.fontWeightBold,
-              }}
-            >
-              JD
-            </Avatar>
-          </Space>
+          </Col>
+          <Col style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+            <OrganizationSwitcher/>
+            <UserButton />
+          </Col>
         </Header>
 
         {/* Main Content */}
@@ -203,7 +209,7 @@ const AppLayout = ({ children }) => {
           style={{
             paddingTop: 84, // 64px header + 20px margin
             paddingLeft: 60,
-            paddingRight: 'min(7%, 100px)',
+            paddingRight: "min(7%, 100px)",
             margin: 0,
             zIndex: 1,
             height: "calc(100vh - 104px)", // 20px top margin + 64px header + 20px bottom margin

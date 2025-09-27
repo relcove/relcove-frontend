@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Row, Col, Typography, Button, Space, Badge, theme } from 'antd';
+import { Card, Row, Col, Typography, Space, Badge, theme } from 'antd';
 import { 
   Slack, 
   Github, 
@@ -7,14 +7,13 @@ import {
   Database, 
   MessageSquare, 
   Zap,
-  Plus,
   Settings,
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
 import ConfigurationOverviewDrawer from '../components/integrations/ConfigurationOverviewDrawer';
 import { DEFAULT_INTEGRATIONS } from '../data/integrations';
-import styles from '../styles/IntegrationsPage.module.css';
+import { PrimaryButton, SecondaryButton } from '../components/StandardButtons';
 
 const { Title, Text } = Typography;
 
@@ -68,22 +67,49 @@ const IntegrationsPage = () => {
   };
 
   return (
-    <div className={styles.integrationsPage}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <Title level={2} className={styles.title}>
-            Integrations
-          </Title>
-          <Text className={styles.subtitle}>
-            Connect your favorite tools and services to streamline your workflow
-          </Text>
+    <div style={{ padding: '24px', backgroundColor: token.colorBgContainer }}>
+      {/* Header */}
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-start',
+          marginBottom: '8px'
+        }}>
+          <div>
+            <Title level={1} style={{ 
+              fontSize: '28px', 
+              fontWeight: 600, 
+              color: token.colorText,
+              margin: 0,
+              fontFamily: token.fontFamilyHeading,
+              letterSpacing: '-0.025em'
+            }}>
+              Integrations
+            </Title>
+            <Text style={{ 
+              fontSize: '16px', 
+              color: token.colorTextSecondary,
+              fontFamily: token.fontFamily,
+              fontWeight: 400
+            }}>
+              Connect your favorite tools and services to streamline your workflow
+            </Text>
+          </div>
         </div>
       </div>
 
-      <div className={styles.content}>
+      {/* Content */}
+      <div>
         {categories.map(category => (
-          <div key={category} className={styles.categorySection}>
-            <Title level={4} className={styles.categoryTitle}>
+          <div key={category} style={{ marginBottom: '40px' }}>
+            <Title level={4} style={{ 
+              fontSize: token.fontSizeLG, 
+              fontWeight: 600, 
+              color: token.colorText,
+              marginBottom: '20px',
+              fontFamily: token.fontFamilyHeading
+            }}>
               {category}
             </Title>
             <Row gutter={[24, 24]}>
@@ -93,64 +119,116 @@ const IntegrationsPage = () => {
                   <Col xs={24} sm={12} lg={8} xl={6} key={integration.id}>
                     <Card
                       hoverable
-                      className={`${styles.integrationCard} ${
-                        integration.status === 'connected' ? styles.connectedCard : ''
-                      }`}
+                      style={{
+                        borderRadius: token.borderRadiusLG,
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                        border: `1px solid ${token.colorBorderSecondary}`,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      bodyStyle={{ padding: '20px' }}
                       onClick={() => handleIntegrationClick(integration)}
                     >
-                      <div className={styles.cardContent}>
-                        <div className={styles.cardHeader}>
+                      <div>
+                        {/* Card Header */}
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center',
+                          marginBottom: '16px'
+                        }}>
                           <div 
-                            className={styles.iconContainer}
-                            style={{ backgroundColor: integration.color }}
+                            style={{
+                              width: '48px',
+                              height: '48px',
+                              borderRadius: '50%',
+                              backgroundColor: integration.color,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white'
+                            }}
                           >
                             {integration.icon}
                           </div>
-                          <div className={styles.statusContainer}>
+                          <div>
                             {getStatusBadge(integration.status)}
                           </div>
                         </div>
                         
-                        <div className={styles.cardBody}>
-                          <Title level={5} className={styles.integrationName}>
+                        {/* Card Body */}
+                        <div style={{ marginBottom: '16px' }}>
+                          <Title level={5} style={{ 
+                            fontSize: token.fontSizeLG, 
+                            fontWeight: 600, 
+                            color: token.colorText,
+                            margin: '0 0 8px 0',
+                            fontFamily: token.fontFamilyHeading
+                          }}>
                             {integration.name}
                           </Title>
-                          <Text className={styles.integrationDescription}>
+                          <Text style={{ 
+                            fontSize: token.fontSizeSM, 
+                            color: token.colorTextSecondary,
+                            lineHeight: '1.5'
+                          }}>
                             {integration.description}
                           </Text>
                         </div>
 
-                        <div className={styles.cardFooter}>
-                          <div className={styles.features}>
+                        {/* Card Footer */}
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center'
+                        }}>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                             {integration.features.slice(0, 2).map((feature, index) => (
-                              <span key={index} className={styles.featureTag}>
+                              <span key={index} style={{
+                                fontSize: token.fontSizeXS,
+                                color: token.colorTextSecondary,
+                                backgroundColor: token.colorFillTertiary,
+                                padding: '2px 8px',
+                                borderRadius: token.borderRadiusSM,
+                                fontWeight: 500
+                              }}>
                                 {feature}
                               </span>
                             ))}
                             {integration.features.length > 2 && (
-                              <span className={styles.featureTag}>
+                              <span style={{
+                                fontSize: token.fontSizeXS,
+                                color: token.colorTextSecondary,
+                                backgroundColor: token.colorFillTertiary,
+                                padding: '2px 8px',
+                                borderRadius: token.borderRadiusSM,
+                                fontWeight: 500
+                              }}>
                                 +{integration.features.length - 2} more
                               </span>
                             )}
                           </div>
                           
-                          <div className={styles.actionButton}>
+                          <div>
                             {integration.status === 'connected' ? (
-                              <Button 
-                                type="text" 
-                                icon={<Settings size={16} />}
-                                className={styles.configureButton}
+                              <SecondaryButton 
+                                icon={<Settings size={14} />}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleIntegrationClick(integration);
+                                }}
                               >
                                 Configure
-                              </Button>
+                              </SecondaryButton>
                             ) : (
-                              <Button 
-                                type="primary" 
-                                size="small"
-                                className={styles.connectButton}
+                              <PrimaryButton 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleIntegrationClick(integration);
+                                }}
                               >
                                 Connect
-                              </Button>
+                              </PrimaryButton>
                             )}
                           </div>
                         </div>

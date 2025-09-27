@@ -55,3 +55,19 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+.cl-footer{
+  display: none;
+}
+
+.cl-userButtonPopoverFooter{
+  display: none;
+}
+
+.cl-organizationSwitcherPopoverFooter{
+  display: none;
+}
+
+.cl-button__createOrganization{
+  display: none;
+}

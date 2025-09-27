@@ -42,7 +42,7 @@
   border-right-color: var(--ant-color-primary) !important;
 }
 
-.menuItemSelected {
+.menuItem:active{
   background-color: var(--ant-color-primary-bg) !important;
   color: var(--ant-color-primary) !important;
   border-right-color: var(--ant-color-primary) !important;

@@ -9,12 +9,17 @@ export const customTheme = {
     colorPrimaryHover: '#1e4a9c',
     colorPrimaryActive: '#1a3d85',
     
-    // Typography tokens
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    fontFamilyCode: '"SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", monospace',
+    // Typography tokens - Modern elegant fonts
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamilyHeading: '"Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamilyCode: '"JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", monospace',
     
-    // Font sizes
+    // Font sizes - Reverted to original sizes
     fontSize: 14,
+    fontSizeSM: 14,
+    fontSizeXS: 12,
+    fontSizeLG: 18,
+    fontSizeXL: 20,
     fontSizeHeading1: 38,
     fontSizeHeading2: 30,
     fontSizeHeading3: 24,
@@ -54,6 +59,15 @@ export const customTheme = {
     // Border colors
     colorBorder: '#d9d9d9',
     colorBorderSecondary: '#f0f0f0',
+    
+    // Required field styling
+    colorRequired: '#ff4d4f',
+    colorRequiredHover: '#ff7875',
+    
+    // Form styling
+    colorFormLabel: 'rgba(0, 0, 0, 0.88)',
+    colorFormLabelRequired: '#ff4d4f',
+    colorFormPlaceholder: 'rgba(0, 0, 0, 0.25)',
   },
   components: {
     // Button component customization
@@ -70,6 +84,39 @@ export const customTheme = {
       controlHeight: 32,
       controlHeightLG: 40,
       controlHeightSM: 24,
+      colorBgContainer: '#ffffff',
+      activeBg: '#ffffff',
+      hoverBg: '#fafafa',
+      colorTextSelection: '#2b59c3',
+      colorBgTextHover: 'rgba(43, 89, 195, 0.1)',
+      colorBgTextActive: 'rgba(43, 89, 195, 0.15)',
+      colorTextPlaceholder: 'rgba(0, 0, 0, 0.25)',
+      colorBorder: '#d9d9d9',
+      colorPrimary: '#2b59c3',
+      colorPrimaryHover: '#1e4a9c',
+    },
+    
+    // Select component customization
+    Select: {
+      borderRadius: 6,
+      controlHeight: 32,
+      controlHeightLG: 40,
+      controlHeightSM: 24,
+      colorBgContainer: '#ffffff',
+      colorBgElevated: '#ffffff',
+      colorBorder: '#d9d9d9',
+      colorPrimary: '#2b59c3',
+      colorPrimaryHover: '#1e4a9c',
+      colorTextPlaceholder: 'rgba(0, 0, 0, 0.25)',
+    },
+    
+    // Form component customization
+    Form: {
+      labelColor: 'rgba(0, 0, 0, 0.88)',
+      labelRequiredMarkColor: '#ff4d4f',
+      labelFontSize: 14,
+      labelHeight: 22,
+      itemMarginBottom: 16,
     },
     
     // Card component customization
@@ -95,11 +142,10 @@ export const customTheme = {
 
 // Typography configuration
 export const typographyConfig = {
-  // Heading font family
-  headingFontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-  
-  // Paragraph font family
+  // Modern elegant font families
+  headingFontFamily: '"Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   paragraphFontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  codeFontFamily: '"JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", monospace',
   
   // Font weights
   fontWeightLight: 300,
@@ -107,17 +153,19 @@ export const typographyConfig = {
   fontWeightMedium: 500,
   fontWeightSemiBold: 600,
   fontWeightBold: 700,
+  fontWeightExtraBold: 800,
   
-  // Font sizes
+  // Font sizes - Reverted to original sizes
   fontSizeXs: '12px',
   fontSizeSm: '14px',
-  fontSizeBase: '16px',
-  fontSizeLg: '18px',
-  fontSizeXl: '20px',
-  fontSize2xl: '24px',
-  fontSize3xl: '30px',
-  fontSize4xl: '36px',
-  fontSize5xl: '48px',
+  fontSizeBase: '14px',
+  fontSizeLg: '16px',
+  fontSizeXl: '18px',
+  fontSize2xl: '20px',
+  fontSize3xl: '24px',
+  fontSize4xl: '30px',
+  fontSize5xl: '36px',
+  fontSize6xl: '48px',
   
   // Line heights
   lineHeightTight: 1.25,
@@ -129,26 +177,41 @@ export const typographyConfig = {
 
 // CSS variables for global typography
 export const typographyCSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+  
   :root {
     --font-heading: ${typographyConfig.headingFontFamily};
     --font-paragraph: ${typographyConfig.paragraphFontFamily};
+    --font-code: ${typographyConfig.codeFontFamily};
     --font-weight-light: ${typographyConfig.fontWeightLight};
     --font-weight-normal: ${typographyConfig.fontWeightNormal};
     --font-weight-medium: ${typographyConfig.fontWeightMedium};
     --font-weight-semibold: ${typographyConfig.fontWeightSemiBold};
     --font-weight-bold: ${typographyConfig.fontWeightBold};
+    --font-weight-extrabold: ${typographyConfig.fontWeightExtraBold};
+    --line-height-tight: ${typographyConfig.lineHeightTight};
+    --line-height-normal: ${typographyConfig.lineHeightNormal};
+  }
+  
+  * {
+    font-family: var(--font-paragraph);
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
+    letter-spacing: -0.025em;
   }
   
-  p, span, div {
+  p, span, div, button, input, select, textarea {
     font-family: var(--font-paragraph);
     font-weight: var(--font-weight-normal);
     line-height: var(--line-height-normal);
+  }
+  
+  code, pre {
+    font-family: var(--font-code);
   }
   
   .font-heading {
@@ -157,5 +220,9 @@ export const typographyCSS = `
   
   .font-paragraph {
     font-family: var(--font-paragraph);
+  }
+  
+  .font-code {
+    font-family: var(--font-code);
   }
 `;
