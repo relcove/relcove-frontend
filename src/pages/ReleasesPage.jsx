@@ -11,6 +11,7 @@ import {
   theme,
   Progress,
 } from "antd";
+import { useNavigate } from "react-router-dom";
 import {
   Rocket,
   Plus,
@@ -35,6 +36,7 @@ const { Option } = Select;
 
 const ReleasesPage = () => {
   const { token } = theme.useToken();
+  const navigate = useNavigate();
   const [releaseType, setReleaseType] = useState("all");
   const [selectedProduct, setSelectedProduct] = useState("web-application");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -219,6 +221,10 @@ const ReleasesPage = () => {
     setDrawerOpen(false);
   };
 
+  const handleReleaseClick = (releaseId) => {
+    navigate(`/releases/${releaseId}`);
+  };
+
   return (
     <div style={{ padding: "24px", backgroundColor: token.colorBgContainer }}>
         {/* Header */}
@@ -395,6 +401,7 @@ const ReleasesPage = () => {
           <Card
             key={release.id}
             hoverable
+            onClick={() => handleReleaseClick(release.id)}
             style={{
               borderRadius: token.borderRadiusLG,
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",

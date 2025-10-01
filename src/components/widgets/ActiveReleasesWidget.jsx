@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, Typography, Space, theme, Progress } from 'antd';
+import { Card, Typography, Space, theme, Progress, Button } from 'antd';
 import { Rocket, Clock, Calendar, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const { Text, Title } = Typography;
 
 const ActiveReleasesWidget = () => {
   const { token } = theme.useToken();
+  const navigate = useNavigate();
 
   // Mock data for active releases
   const releases = [
@@ -74,18 +76,21 @@ const ActiveReleasesWidget = () => {
             Active Releases
           </Title>
         </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          color: token.colorPrimary,
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 500
-        }}>
-          <Text style={{ color: token.colorPrimary }}>View All</Text>
-          <ExternalLink size={14} />
-        </div>
+        <Button
+          type="text"
+          size="small"
+          onClick={() => navigate('/releases')}
+          style={{
+            color: token.colorPrimary,
+            fontSize: '14px',
+            fontWeight: 500,
+            padding: '4px 8px',
+            height: 'auto'
+          }}
+          icon={<ExternalLink size={14} />}
+        >
+          View All
+        </Button>
       </div>
 
       {/* Releases List */}
