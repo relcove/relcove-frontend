@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import IntegrationsPage from "./pages/IntegrationsPage";
 import IntegrationSetupPage from "./pages/IntegrationSetupPage";
 import ReleasesPage from "./pages/ReleasesPage";
+import ReleaseDetailsPage from "./pages/ReleaseDetailsPage";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SignUpPage from "./pages/auth/SignUpPage";
 
@@ -41,6 +42,7 @@ function App() {
                         element={<IntegrationSetupPage />}
                       />
                       <Route path="/releases" element={<ReleasesPage />} />
+                      <Route path="/releases/:releaseId" element={<ReleaseDetailsPage />} />
                       <Route path="/*" element={<Dashboard />} />
                     </Routes>
                   </ProtectedRoute>
