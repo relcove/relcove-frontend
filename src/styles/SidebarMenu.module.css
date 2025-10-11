@@ -1,98 +1,92 @@
 /* SidebarMenu CSS Module */
 
+/* ===== Sidebar wrapper ===== */
+/* ===== If this is a CSS Module file ===== */
+
+/* Your wrapper (optional) */
 .sidebarMenu {
   width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
+/* Your item/icon classes (optional) */
 .menuItem {
-  width: 100% !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  border-right: 3px solid transparent !important;
-  transition: all 0.2s ease !important;
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+.menuIcon { font-size: 18px; line-height: 1; }
+
+/* === Ant Design overrides (GLOBAL) === */
+:global(.ant-menu) {
+  background: transparent;
+  border: none;
 }
 
-.menuItemExpanded {
-  padding: 12px 20px !important;
-  justify-content: flex-start !important;
+/* Base item */
+:global(.ant-menu-item) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
-.menuItemCollapsed {
+/* Hover left bar */
+:global(.ant-menu-item:hover) {
+  background-color: var(--ant-color-primary-bg) !important;
+  color: var(--ant-color-primary) !important;
+  box-shadow: inset 3px 0 0 var(--ant-color-primary) !important;
+}
+
+/* SELECTED left bar (persistent, even without hover) */
+:global(.ant-menu-item-selected) {
+  background-color: var(--ant-color-primary-bg-hover) !important;
+  color: var(--ant-color-primary) !important;
+  box-shadow: inset 3px 0 0 var(--ant-color-primary) !important;
+}
+
+/* ===== Collapsed state: center icons, hide text, remove left padding ===== */
+:global(.ant-menu-inline-collapsed > .ant-menu-item) {
+  padding-left: 0 !important;       /* overrides the 24px inline padding */
+  padding-right: 0 !important;
+  justify-content: center !important;
   text-align: center !important;
 }
 
-/* Target Ant Design's internal structure for collapsed state */
-.menuItemCollapsed .ant-menu-item-icon {
-  margin: 0 !important;
+/* Hide the label when collapsed */
+:global(.ant-menu-inline-collapsed > .ant-menu-item .ant-menu-title-content) {
+  display: none !important;
+}
+
+/* Center the icon when collapsed */
+:global(.ant-menu-inline-collapsed > .ant-menu-item .ant-menu-item-icon) {
+  margin: 0 auto !important;
   display: flex !important;
-  justify-content: center !important;
   align-items: center !important;
-  width: 100% !important;
+  justify-content: center !important;
 }
 
-.menuItemCollapsed .ant-menu-title-content {
-  display: none !important;
-}
 
-.menuItem:hover {
-  background-color: var(--ant-color-primary-bg) !important;
-  color: var(--ant-color-primary) !important;
-  border-right-color: var(--ant-color-primary) !important;
-}
-
-.menuItem:active{
-  background-color: var(--ant-color-primary-bg) !important;
-  color: var(--ant-color-primary) !important;
-  border-right-color: var(--ant-color-primary) !important;
-}
-
-.menuItemSelected:hover {
-  background-color: var(--ant-color-primary-bg-hover) !important;
-  color: var(--ant-color-primary) !important;
-}
-
-.menuIcon {
-  font-size: 16px !important;
-}
-
-.menuIconCollapsed {
-  margin-right: 0px !important;
-  font-size: 18px !important;
-}
-
-.menuIconExpanded {
-  margin-right: 12px !important;
-}
-
-.menuTitleContent {
-  display: block !important;
-}
-
-.menuTitleContentHidden {
-  display: none !important;
-}
-
-.menu {
-  background: transparent;
-  border: none;
+/* Product Selector Styling */
+.productSelector {
   width: 100%;
 }
 
-/* Ensure menu items are properly centered when collapsed */
-.menu .ant-menu-item {
-  display: flex !important;
-  align-items: center !important;
+.productSelector .ant-select-selector {
+  border-radius: 6px !important;
+  border: 1px solid #d9d9d9 !important;
+  background-color: #fafafa !important;
 }
 
-.menu .ant-menu-item.menuItemCollapsed {
-  justify-content: center !important;
-  text-align: center !important;
+.productSelector .ant-select-selector:hover {
+  border-color: var(--ant-color-primary) !important;
 }
 
-.menu .ant-menu-item.menuItemCollapsed > * {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+.productSelector .ant-select-selection-item {
+  font-size: 14px !important;
+  font-weight: 500 !important;
 }

@@ -1,7 +1,50 @@
 import React from "react";
-import { Card, Typography, theme, Progress, Avatar } from "antd";
+import { Card, Typography, theme, Progress, Avatar, Tag } from "antd";
 import { CheckCircle, Clock, AlertCircle, AlertTriangle } from "lucide-react";
-import Table, { TableUtils } from "../Table";
+import GeneralTable from "../GeneralTable";
+
+export const getStatusConfig = (status) => {
+  switch (status) {
+    case "done":
+    case "completed":
+      return {
+        color: "#10B981",
+        bgColor: "#ECFDF5",
+        icon: CheckCircle,
+        label: "Done",
+      };
+    case "in-progress":
+    case "in_progress":
+      return {
+        color: "#F59E0B",
+        bgColor: "#FFFBEB",
+        icon: Clock,
+        label: "In Progress",
+      };
+    case "blocked":
+      return {
+        color: "#EF4444",
+        bgColor: "#FEF2F2",
+        icon: AlertTriangle,
+        label: "Blocked",
+      };
+    case "pending":
+      return {
+        color: "#6B7280",
+        bgColor: "#F9FAFB",
+        icon: AlertCircle,
+        label: "Pending",
+      };
+    default:
+      return {
+        color: "#6B7280",
+        bgColor: "#F9FAFB",
+        icon: AlertCircle,
+        label: "Unknown",
+      };
+  }
+};
+
 
 const { Title, Text } = Typography;
 
@@ -102,37 +145,77 @@ const ReleaseChecklistTab = ({ release }) => {
       title: "Release Item",
       dataIndex: "title",
       key: "title",
-      render: (text) => TableUtils.renderReleaseItem(text),
+      render: (text) => (
+        <Text style={{ fontWeight: 500, color: token.colorText }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: "Assigned To",
       dataIndex: "assignedTo",
       key: "assignedTo",
-      render: (text, record) => TableUtils.renderAvatar(text, record.initials),
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Avatar size="small" style={{ backgroundColor: token.colorPrimary }}>
+            {record.initials}
+          </Avatar>
+          <Text style={{ fontSize: token.fontSizeSM }}>{text}</Text>
+        </div>
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => TableUtils.renderStatusPill(status),
+      render: (status) => {
+        const statusConfig = getStatusConfig(status);
+        const StatusIcon = statusConfig.icon;
+        return (
+          <Tag
+            icon={<StatusIcon size={12} />}
+            color={statusConfig.color}
+            style={{
+              backgroundColor: statusConfig.bgColor,
+              border: "none",
+              color: statusConfig.color,
+              fontWeight: 500,
+            }}
+          >
+            {statusConfig.label}
+          </Tag>
+        );
+      },
     },
     {
       title: "Comments",
       dataIndex: "comments",
       key: "comments",
-      render: (text) => TableUtils.renderComment(text),
+      render: (text) => (
+        <Text style={{ fontSize: token.fontSizeSM, color: token.colorTextSecondary }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: "Build",
       dataIndex: "build",
       key: "build",
-      render: (text) => TableUtils.renderBuild(text),
+      render: (text) => (
+        <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500 }}>
+          #{text}
+        </Text>
+      ),
     },
     {
       title: "Last Updated",
       dataIndex: "lastUpdated",
       key: "lastUpdated",
-      render: (text) => TableUtils.renderLastUpdated(text),
+      render: (text) => (
+        <Text style={{ fontSize: token.fontSizeSM, color: token.colorTextSecondary }}>
+          {text}
+        </Text>
+      ),
     },
   ];
 
@@ -206,22 +289,16 @@ const ReleaseChecklistTab = ({ release }) => {
       </div>
 
       {/* Table */}
-      <Card
-        style={{
-          borderRadius: token.borderRadiusLG,
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-          border: `1px solid ${token.colorBorderSecondary}`,
-        }}
-        bodyStyle={{ padding: 0 }}
-      >
-        <Table
-          columns={columns}
-          dataSource={checklistItems}
-          pagination={false}
-          size="middle"
-          showHeader={true}
-        />
-      </Card>
+      <GeneralTable
+        columns={columns}
+        dataSource={checklistItems}
+        rowKey="id"
+        pagination={false}
+        emptyStateTitle="No checklist items found"
+        emptyStateDescription="Release checklist items will appear here."
+        emptyStateIcon="check-circle"
+        emptyStateSize="medium"
+      />
     </div>
   );
 };

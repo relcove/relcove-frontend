@@ -4,7 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 const { useToken } = theme;
 
-const DefaultLoader = ({ size = "large", tip = "Loading..." }) => {
+const DefaultLoader = ({ size = "large", tip = "Loading...", height = "calc(100vh - 94px - 84px)" }) => {
   const { token } = useToken();
 
   return (
@@ -14,7 +14,7 @@ const DefaultLoader = ({ size = "large", tip = "Loading..." }) => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "calc(100vh - 94px - 84px)",
+        minHeight: height,
         padding: "20px",
       }}
     >

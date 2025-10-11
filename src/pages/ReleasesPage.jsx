@@ -29,7 +29,6 @@ import {
 } from "lucide-react";
 import { PrimaryButton, SecondaryButton } from "../components/StandardButtons";
 import NewReleaseDrawer from "../components/NewReleaseDrawer";
-import ProductSelector from "../components/ProductSelector";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -38,7 +37,6 @@ const ReleasesPage = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const [releaseType, setReleaseType] = useState("all");
-  const [selectedProduct, setSelectedProduct] = useState("web-application");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Mock data for releases with random test types
@@ -263,16 +261,6 @@ const ReleasesPage = () => {
               </Text>
             </div>
 
-            {/* Right side - Product Selector */}
-            <div>
-              <ProductSelector
-                selectedProduct={selectedProduct}
-                onProductChange={setSelectedProduct}
-                showLabel={true}
-                width={180}
-                size="middle"
-              />
-            </div>
           </div>
         </div>
 
