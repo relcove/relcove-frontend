@@ -18,6 +18,16 @@ export const queryKeys = {
     detail: (id) => [...queryKeys.featureFlags.details(), id],
   },
   
+  // Releases
+  releases: {
+    all: ['releases'],
+    lists: () => [...queryKeys.releases.all, 'list'],
+    list: (filters = {}) => [...queryKeys.releases.lists(), { filters }],
+    details: () => [...queryKeys.releases.all, 'detail'],
+    detail: (id) => [...queryKeys.releases.details(), id],
+    byProduct: (productId) => [...queryKeys.releases.all, 'byProduct', productId],
+  },
+  
   // Users
   users: {
     all: ['users'],
@@ -31,6 +41,8 @@ export const queryKeys = {
   enums: {
     all: ['enums'],
     productStatus: () => [...queryKeys.enums.all, 'productStatus'],
+    releaseStatus: () => [...queryKeys.enums.all, 'releaseStatus'],
+    releaseType: () => [...queryKeys.enums.all, 'releaseType'],
   },
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Select, Space, theme, Typography, Row, Col, App, Spin } from 'antd';
-import { Plus } from 'lucide-react';
+import { Edit, Plus } from 'lucide-react';
 import GeneralDrawer from './GeneralDrawer';
 import { PRODUCT_ICONS, renderIconFromCode } from '../utils/productIcons.jsx';
 import { CancelButton, SaveButton } from './StandardButtons';
@@ -104,7 +104,7 @@ const NewProductDrawer = ({ open, onClose, onProductCreated, editingProduct = nu
       open={open}
       onClose={handleCancel}
       title={isEditing ? "Edit Product" : "Add Product"}
-      icon={<Plus size={16} color="white" />}
+      icon={isEditing ? <Edit size={16} color="white" /> : <Plus size={16} color="white" />}
       footer={footer}
     >
       <div style={{ marginBottom: '20px' }}>

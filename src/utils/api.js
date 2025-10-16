@@ -76,11 +76,13 @@ export const createCrudApi = (baseEndpoint, getToken = null) => {
   const cleanBaseEndpoint = baseEndpoint.endsWith('/') ? baseEndpoint.slice(0, -1) : baseEndpoint;
   
   return {
-    getAll: async () => {
-      const response = await apiRequest(`${cleanBaseEndpoint}/`, {}, getToken);
+    getAll: async (queryParams = '') => {
+      const endpoint = queryParams ? `${cleanBaseEndpoint}/?${queryParams}` : `${cleanBaseEndpoint}/`;
+      const response = await apiRequest(endpoint, {}, getToken);
       // Handle paginated response format: {products: [], total: 0, page: 1, page_size: 10}
       // or {users: [], total: 0, page: 1, page_size: 10}
-      return response?.products || response?.users || response || [];
+      // or {releases: [], total: 0, page: 1, page_size: 10}
+      return response?.products || response?.users || response?.releases || response || [];
     },
     getById: (id) => apiRequest(`${cleanBaseEndpoint}/${id}`, {}, getToken),
     create: (data) => apiRequest(`${cleanBaseEndpoint}/`, {

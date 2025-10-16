@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 import { Table, Tag, theme, Typography } from "antd";
-import { renderIconFromCode } from "../utils/productIcons.jsx";
 import EmptyState from "./EmptyState";
 import DefaultLoader from "./DefaultLoader";
 import UserAvatar from "./UserAvatar";
+import { formatDateForTable } from "../utils/helpers";
+import { renderIconFromCode } from "../utils/productIcons";
 
 const { Text } = Typography;
 
@@ -344,23 +345,9 @@ export const OwnerCell = ({ owner }) => (
   />
 );
 
-// Helper function to format date as YY-MMM-DD
-const formatDate = (dateString) => {
-  if (!dateString) return 'N/A';
-  
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid Date';
-  
-  const year = date.getFullYear().toString();
-  const month = date.toLocaleDateString('en-US', { month: 'short' }); // Get abbreviated month
-  const day = date.getDate().toString().padStart(2, '0'); // Get day with leading zero
-  
-  return `${month} ${day}, ${year}`;
-};
-
 export const DateCell = ({ date }) => (
   <Text style={{ fontSize: "14px", color: "#6b7280" }}>
-    {formatDate(date)}
+    {formatDateForTable(date)}
   </Text>
 );
 
