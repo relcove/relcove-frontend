@@ -9,7 +9,9 @@ import {
   Send,
   Bot,
   User,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { theme } from 'antd';
 import { useMutation } from '@tanstack/react-query';
@@ -17,7 +19,9 @@ import { useUser } from '@clerk/clerk-react';
 import { useChatQuery } from '../services/chat';
 import UserAvatar from '../components/UserAvatar';
 import CombinedDataRenderer from '../components/CombinedDataRenderer';
+import DataFiltersDrawer from '../components/DataFiltersDrawer';
 import styles from '../styles/ChatPage.module.css';
+import drawerStyles from '../styles/DataFiltersDrawer.module.css';
 
 const { Title, Text } = Typography;
 
@@ -27,6 +31,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Use the chat query service
@@ -34,6 +39,10 @@ const ChatPage = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   useEffect(() => {
@@ -251,7 +260,7 @@ const ChatPage = () => {
   // Show landing page when there are no messages
   if (messages.length === 0) {
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${drawerStyles.chatContainer} ${drawerOpen ? drawerStyles.drawerOpen : ''}`}>
         <div className={styles.landingContent}>
           {/* AI-Powered Analytics Badge */}
           <div className={styles.badge}>
@@ -316,12 +325,23 @@ const ChatPage = () => {
             />
           </div>
         </div>
+        
+        {/* Toggle Button */}
+        <button 
+          className={`${drawerStyles.toggleButton} ${drawerOpen ? drawerStyles.open : ''}`}
+          onClick={toggleDrawer}
+        >
+          {drawerOpen ? <ChevronRight className={drawerStyles.toggleIcon} /> : <ChevronLeft className={drawerStyles.toggleIcon} />}
+        </button>
+        
+        {/* Data Filters Drawer */}
+        <DataFiltersDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />
       </div>
     );
   }
   // Show chat interface when there are messages
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${drawerStyles.chatContainer} ${drawerOpen ? drawerStyles.drawerOpen : ''}`}>
 
       {/* Chat Messages */}
       <div className={styles.chatArea}>
@@ -474,6 +494,17 @@ const ChatPage = () => {
           />
         </div>
       </div>
+      
+      {/* Toggle Button */}
+      <button 
+        className={`${drawerStyles.toggleButton} ${drawerOpen ? drawerStyles.open : ''}`}
+        onClick={toggleDrawer}
+      >
+        {drawerOpen ? <ChevronRight className={drawerStyles.toggleIcon} /> : <ChevronLeft className={drawerStyles.toggleIcon} />}
+      </button>
+      
+      {/* Data Filters Drawer */}
+      <DataFiltersDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
   );
 };

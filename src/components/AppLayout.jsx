@@ -156,6 +156,7 @@ const AppLayout = ({ children }) => {
           minHeight: "calc(100vh - 40px)",
           overflow: "hidden",
         }}
+        className="app-layout-content"
       >
         {/* Top Header Bar */}
         <Header
