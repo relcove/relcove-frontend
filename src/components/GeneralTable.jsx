@@ -252,8 +252,8 @@ const GeneralTable = ({
         }}
         styles={{
           header: {
-            backgroundColor: "#ffffff",
-            borderBottom: "1px solid #f0f0f0",
+            backgroundColor: "#f8f9fa",
+            borderBottom: "1px solid #e5e7eb",
           },
           body: {
             backgroundColor: "#ffffff",

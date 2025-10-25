@@ -13,6 +13,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Better text selection styling */
+::selection {
+  background-color: #a8c7fa;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #a8c7fa;
+  color: white;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -59,6 +70,18 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+  
+  /* Light theme text selection */
+  ::selection {
+    background-color: #2b59c3;
+    color: white;
+  }
+  
+  ::-moz-selection {
+    background-color: #2b59c3;
+    color: white;
+  }
+  
   a:hover {
     color: #747bff;
   }

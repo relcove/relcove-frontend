@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Menu, theme, Select, Dropdown, message } from "antd";
-import { Home, Settings, Zap, Rocket, Globe, Sparkles } from "lucide-react";
+import { Home, Settings, Zap, Rocket, Globe, Sparkles, MessageCircle } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/SidebarMenu.module.css";
 import { renderIconFromCode } from "../utils/productIcons";
@@ -116,6 +116,11 @@ const SidebarMenu = ({ collapsed }) => {
       key: "/settings",
       icon: <Settings size={16} />,
       label: "Settings",
+    },
+    {
+      key: "/chat",
+      icon: <MessageCircle size={16} />,
+      label: "Chat",
     },
     {
       key: "/integrations",

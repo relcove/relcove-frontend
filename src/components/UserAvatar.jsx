@@ -17,7 +17,6 @@ const UserAvatar = ({
 }) => {
   const { token } = useToken();
   const { users, isLoading, error, getUserByClerkId } = useUsersContext();
-  
   // Get the specific user by clerk_id
   const user = getUserByClerkId(clerkId);
 

@@ -15,6 +15,7 @@ import ReleasesPage from "./pages/ReleasesPage";
 import ReleaseDetailsPage from "./pages/ReleaseDetailsPage";
 import IssuesPage from "./pages/IssuesPage";
 import SettingsPage from "./pages/SettingsPage";
+import ChatPage from "./pages/ChatPage";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SignUpPage from "./pages/auth/SignUpPage";
 import { queryClient } from "./api/queryClient";
@@ -47,9 +48,10 @@ function App() {
                       <Route path="/products/:productId/releases/:releaseId" element={<ReleaseDetailsPage />} />
                       <Route path="/products/:productId/issues" element={<IssuesPage />} />
                       
-                      {/* Admin routes (global, no product prefix) */}
-                      <Route path="/settings" element={<SettingsPage />} />
-                      <Route path="/integrations" element={<IntegrationsPage />} />
+                {/* Admin routes (global, no product prefix) */}
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/integrations" element={<IntegrationsPage />} />
                       <Route path="/integrations/:id/new" element={<IntegrationSetupPage />} />
                       
                       {/* Redirect root to first available product */}
