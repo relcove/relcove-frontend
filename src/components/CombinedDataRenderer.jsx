@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Typography, Space } from 'antd';
-import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { TrendingDown, TrendingUp, Minus, ChevronDown, ChevronRight } from 'lucide-react';
 import { theme } from 'antd';
 import GeneralTable from './GeneralTable';
 import { formatCurrency, formatNumericCurrency, parseFormattedText } from '../utils/currency';
@@ -8,6 +8,39 @@ import styles from '../styles/CombinedDataRenderer.module.css';
 
 const { Title, Text, Paragraph } = Typography;
 const { useToken } = theme;
+
+// Thought Section Component
+const ThoughtSection = ({ item }) => {
+  const [expanded, setExpanded] = useState(false);
+  const { token } = useToken();
+
+  return (
+    <div className={styles.thoughtContainer}>
+      <div 
+        className={styles.thoughtHeader}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <Space>
+          <span className={styles.thoughtText}>
+            Thought for sometime
+          </span>
+          {expanded ? (
+            <ChevronDown size={16} className={styles.chevronIcon} />
+          ) : (
+            <ChevronRight size={16} className={styles.chevronIcon} />
+          )}
+        </Space>
+      </div>
+      {expanded && (
+        <div className={styles.thoughtContent}>
+          <Paragraph style={{ margin: 0, fontSize: '14px', lineHeight: 1.6 }}>
+            {item.text}
+          </Paragraph>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const CombinedDataRenderer = ({ data }) => {
   const { token } = useToken();
@@ -32,11 +65,9 @@ const CombinedDataRenderer = ({ data }) => {
       return `${sign}₹${(absNum / 1000000).toFixed(1)}M`;
     } else if (absNum >= 1000) {
       return `${sign}₹${(absNum / 1000).toFixed(1)}K`;
-    } else if (absNum >= 100) {
-      // Handle values that are likely in millions (like 365, 479)
-      return `${sign}₹${absNum.toFixed(0)}M`;
     } else {
-      return `${sign}₹${absNum.toFixed(0)}`;
+      // For values less than 1000, just show the number with commas
+      return `${sign}₹${absNum.toLocaleString()}`;
     }
   };
 
@@ -272,6 +303,9 @@ const CombinedDataRenderer = ({ data }) => {
   // Render individual data item based on type
   const renderDataItem = (item) => {
     switch (item.type) {
+      case 'thought':
+        return <ThoughtSection item={item}/>;
+      
       case 'heading':
         return (
           <Title level={3} style={{ marginBottom: '16px', marginTop: 0, color: token.colorText }}>

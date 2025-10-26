@@ -443,6 +443,46 @@
   color: #6b7280;
 }
 
+/* Thought Section */
+.thoughtContainer {
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.thoughtHeader {
+  padding: 6px 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.thoughtHeader:hover {
+  background: #f3f4f6;
+}
+
+.thoughtText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  align-items: center;
+}
+
+.chevronIcon {
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.thoughtContent {
+  padding: 16px;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .metricsGrid {
