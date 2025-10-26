@@ -96,7 +96,7 @@ const DataFiltersDrawer = ({ visible, onClose }) => {
         title: 'Labels',
         dataIndex: 'labels',
         key: 'labels',
-        width: '35%',
+        width: '30%',
         render: (labels) => (
           <div className={styles.labelsContainer}>
             {labels && labels.length > 0 ? (
@@ -115,9 +115,9 @@ const DataFiltersDrawer = ({ visible, onClose }) => {
       title: 'Hierarchy',
       dataIndex: 'statement_type',
       key: 'statement_type',
-      width: '20%',
+      width: '25%',
       render: (text, record) => (
-        <Text>{record.statement_type}-{record.sub_entity} ({record.page_number})</Text>
+        <Text style={{ fontSize: '12px' }}>{record.statement_type}-{record.sub_entity} ({record.page_number})</Text>
       ),
     },
   ];
@@ -125,23 +125,6 @@ const DataFiltersDrawer = ({ visible, onClose }) => {
   // Check if we're loading anything
   const isLoading = optionsLoading || reportsLoading;
 
-  // Debug logging
-  useEffect(() => {
-    if (reportsData) {
-      console.log('Reports data received:', reportsData);
-      console.log('Reports array:', reportsData.reports);
-      console.log('Is reports array?', Array.isArray(reportsData.reports));
-      console.log('Table data:', tableData);
-      console.log('Filtered table data:', filteredTableData);
-      console.log('Search term:', searchTerm);
-      if (tableData.length > 0) {
-        console.log('Sample record:', tableData[0]);
-        console.log('Sample metric_type:', tableData[0]?.metric_type);
-        console.log('Sample labels:', tableData[0]?.labels);
-        console.log('Sample hierarchy:', `${tableData[0]?.statement_type} ${tableData[0]?.sub_entity}`);
-      }
-    }
-  }, [reportsData, tableData, filteredTableData, searchTerm]);
 
   return (
     <div className={`${styles.drawer} ${visible ? styles.open : styles.closed}`}>
@@ -230,11 +213,11 @@ const DataFiltersDrawer = ({ visible, onClose }) => {
               <Table
                 columns={columns}
                 dataSource={filteredTableData}
-                pagination={false}
                 size="small"
                 className={styles.table}
                 showHeader={true}
                 scroll={{ y: 400 }}
+                pagination={{defaultPageSize: 20}}
               />
             ) : null}
           </div>

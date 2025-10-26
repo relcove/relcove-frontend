@@ -1,7 +1,7 @@
 /* CombinedDataRenderer.module.css */
 
 .combinedDataContainer {
-  margin: 16px 0;
+  margin: 0 0 16px 0;
   max-width: 100%;
 }
 
@@ -200,7 +200,7 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .combinedDataContainer {
-    margin: 12px 0;
+    margin: 0px 0px 12px 0;
   }
   
   .dataTable :global(.ant-table-thead > tr > th),

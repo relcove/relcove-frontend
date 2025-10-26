@@ -22,6 +22,7 @@ import CombinedDataRenderer from '../components/CombinedDataRenderer';
 import DataFiltersDrawer from '../components/DataFiltersDrawer';
 import styles from '../styles/ChatPage.module.css';
 import drawerStyles from '../styles/DataFiltersDrawer.module.css';
+import { PrimaryButton, SecondaryButton } from '../components/StandardButtons';
 
 const { Title, Text } = Typography;
 
@@ -327,12 +328,11 @@ const ChatPage = () => {
         </div>
         
         {/* Toggle Button */}
-        <button 
-          className={`${drawerStyles.toggleButton} ${drawerOpen ? drawerStyles.open : ''}`}
+        <SecondaryButton 
+          icon={drawerOpen ? <ChevronRight className={drawerStyles.toggleIcon} size={24} /> : <ChevronLeft className={drawerStyles.toggleIcon} size={24}/>}
           onClick={toggleDrawer}
-        >
-          {drawerOpen ? <ChevronRight className={drawerStyles.toggleIcon} /> : <ChevronLeft className={drawerStyles.toggleIcon} />}
-        </button>
+          className={drawerStyles.toggleButton + ' ' + (drawerOpen ? drawerStyles.open : drawerStyles.closed)}
+        />
         
         {/* Data Filters Drawer */}
         <DataFiltersDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />

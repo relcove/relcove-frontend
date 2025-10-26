@@ -6,6 +6,38 @@
   position: relative;
 }
 
+/* Hide scrollbar by default, show on hover/scroll */
+.chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.chatMessages:hover::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.3);
+}
+
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 155, 155, 0.5);
+}
+
+.chatMessages {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.chatMessages:hover {
+  scrollbar-color: rgba(155, 155, 155, 0.3) transparent;
+}
+
 
 /* Landing Page */
 .landingContent {
@@ -275,7 +307,6 @@
 .messagesContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -309,13 +340,9 @@
 }
 
 .messageBubbleBot {
-  background: rgba(255, 255, 255, 0.8);
+  background: transparent;
   backdrop-filter: blur(10px);
-  padding: 12px 16px;
-  border-radius: 16px;
-  border-top-left-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 0px 0px;
   max-width: 85%;
 }
 
@@ -409,8 +436,13 @@
 }
 
 .chatArea::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.3);
+  background: transparent;
   border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.chatArea:hover::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
 }
 
 .chatArea::-webkit-scrollbar-thumb:hover {
@@ -466,17 +498,30 @@
   }
 
   .messagesContainer {
-    padding: 0 20px;
     gap: 12px;
   }
 
   .messageBubbleUser,
   .messageBubbleBot {
     max-width: 85%;
-    padding: 10px 14px;
   }
 
   .messageText {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .userAvatar{
+    display: none;
+  } 
+  .messageBubbleBot {
+    max-width: 95%;
+  }
+  .botAvatar{
+    display: none;
+  }
+  .followUpQueriesContainer {
+    margin-left: 0px;
   }
 }

@@ -4,6 +4,7 @@
   top: 64px; /* Start below header */
   right: -800px;
   width: 800px;
+  max-width: calc(100% - 40px);
   height: calc(100vh - 64px); /* Full height minus header */
   background: white;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
@@ -195,44 +196,42 @@
 
 /* Toggle Button */
 .toggleButton {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background: white;
+  position: fixed !important;
+  top: 50% !important;
+  right: 20px !important;
+  transform: translateY(-50%) !important;
+  width: 50px !important;
+  height: 50px !important;
+  background: white !important;
   border: 2px solid #e5e7eb;
-  border-radius: 50%;
-  display: flex;
+  border-radius: 50% !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
-  z-index: 1001;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+  z-index: 1001 !important;
 }
 
 .toggleButton:hover {
-  background: #f8f9fa;
-  border-color: #3b82f6;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-50%) scale(1.05);
+  background: #f8f9fa !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-50%) scale(1.05) !important;
 }
 
 .toggleButton.open {
-  right: 820px;
+  right: calc(min((calc(100% - 40px)), 800px) - 20px) !important;
 }
 
 .toggleIcon {
-  width: 24px;
-  height: 24px;
-  color: #374151;
-  transition: all 0.2s ease;
+  color: #374151 !important;
+  transition: all 0.2s ease !important;
 }
 
 .toggleButton:hover .toggleIcon {
-  color: #3b82f6;
+  color: #3b82f6 !important;
 }
 
 /* Loading and Error States */

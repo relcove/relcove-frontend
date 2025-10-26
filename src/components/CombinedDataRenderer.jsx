@@ -274,7 +274,7 @@ const CombinedDataRenderer = ({ data }) => {
     switch (item.type) {
       case 'heading':
         return (
-          <Title level={3} style={{ marginBottom: '16px', color: token.colorText }}>
+          <Title level={3} style={{ marginBottom: '16px', marginTop: 0, color: token.colorText }}>
             {renderFormattedText(item.text)}
           </Title>
         );
