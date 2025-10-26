@@ -113,11 +113,11 @@ const DataFiltersDrawer = ({ visible, onClose }) => {
       },
     {
       title: 'Hierarchy',
-      dataIndex: 'statement_type',
-      key: 'statement_type',
+      dataIndex: 'namespace',
+      key: 'namespace',
       width: '25%',
       render: (text, record) => (
-        <Text style={{ fontSize: '12px' }}>{record.statement_type}-{record.sub_entity} ({record.page_number})</Text>
+        <Text style={{ fontSize: '12px' }}>{record.namespace}</Text>
       ),
     },
   ];
