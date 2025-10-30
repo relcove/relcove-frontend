@@ -1,86 +1,57 @@
 import React, { useState } from 'react';
-import { Form, Input, Select, Space, theme, Typography, message, Row, Col, Tag } from 'antd';
+import { Form, Input, Select, Space, theme, Typography, Row, Col, App } from 'antd';
 import { Rocket } from 'lucide-react';
 import GeneralDrawer from './GeneralDrawer';
 import { CancelButton, SaveButton } from './StandardButtons';
+import { useCreateRelease } from '../services/releases';
+import { useProducts } from '../services/products';
+import { useReleaseStatusEnum, useReleaseTypeEnum } from '../services/enums';
+import UserDropdown from './UserDropdown';
+import DefaultLoader from './DefaultLoader';
 
 const { Text } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-const NewReleaseDrawer = ({ open, onClose, onReleaseCreated }) => {
+const NewReleaseDrawer = ({ open, onClose, onReleaseCreated, productId }) => {
   const { token } = theme.useToken();
+  const { message } = App.useApp();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-
-  // Mock data for dropdowns
-  const owners = [
-    { value: 'sarah-chen', label: 'Sarah Chen', email: 'sarah@company.com' },
-    { value: 'mike-wilson', label: 'Mike Wilson', email: 'mike@company.com' },
-    { value: 'alex-brown', label: 'Alex Brown', email: 'alex@company.com' },
-    { value: 'emma-davis', label: 'Emma Davis', email: 'emma@company.com' },
-    { value: 'david-lee', label: 'David Lee', email: 'david@company.com' }
-  ];
-
-  const products = [
-    { value: 'web-application', label: 'Web Application' },
-    { value: 'mobile-app', label: 'Mobile App' },
-    { value: 'api-service', label: 'API Service' },
-    { value: 'desktop-app', label: 'Desktop App' }
-  ];
-
-  const releaseTypes = [
-    { value: 'major', label: 'Major Release' },
-    { value: 'minor', label: 'Minor Release' },
-    { value: 'patch', label: 'Patch Release' },
-    { value: 'hotfix', label: 'Hotfix Release' }
-  ];
-
-  const statuses = [
-    { value: 'planning', label: 'Planning' },
-    { value: 'development', label: 'Development' },
-    { value: 'testing', label: 'Testing' },
-    { value: 'rc', label: 'Release Candidate' },
-    { value: 'released', label: 'Released' }
-  ];
+  
+  // API hooks
+  const createReleaseMutation = useCreateRelease();
+  const { data: products = [] } = useProducts();
+  const { data: statusOptions = [], isLoading: statusLoading } = useReleaseStatusEnum();
+  const { data: typeOptions = [], isLoading: typeLoading } = useReleaseTypeEnum();
+  
+  // Get current product
+  const currentProduct = products.find(p => p.product_id === productId);
 
   const handleSubmit = async (values) => {
-    setLoading(true);
-    try {
-      // Mock API call to create new release
-      const response = await fetch('/api/v1/releases', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: values.name,
-          owner: values.owner,
-          product: values.product,
-          releaseType: values.releaseType,
-          status: values.status,
-          description: values.description || '',
-          baseVersion: values.baseVersion,
-          tags: values.tags || [],
-          createdAt: new Date().toISOString()
-        }),
-      });
+    const releaseData = {
+      name: values.name,
+      description: values.description || '',
+      owner: values.owner,
+      product_id: productId,
+      release_type: values.releaseType,
+      status: values.status,
+      target_release_date: values.targetReleaseDate,
+      base_version_id: values.baseVersion,
+      tags: values.tags || [],
+    };
 
-      if (response.ok) {
-        const newRelease = await response.json();
+    createReleaseMutation.mutate(releaseData, {
+      onSuccess: (newRelease) => {
         message.success('Release created successfully!');
         form.resetFields();
         onClose();
         onReleaseCreated(newRelease);
-      } else {
-        throw new Error('Failed to create release');
+      },
+      onError: (error) => {
+        console.error('Error creating release:', error);
+        message.error(error.message || 'Failed to create release. Please try again.');
       }
-    } catch (error) {
-      console.error('Error creating release:', error);
-      message.error('Failed to create release. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleCancel = () => {
@@ -92,7 +63,7 @@ const NewReleaseDrawer = ({ open, onClose, onReleaseCreated }) => {
     <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
       <CancelButton onClick={handleCancel} />
       <SaveButton 
-        loading={loading}
+        loading={createReleaseMutation.isPending}
         onClick={() => form.submit()}
       >
         Create Release
@@ -161,58 +132,18 @@ const NewReleaseDrawer = ({ open, onClose, onReleaseCreated }) => {
               }
               rules={[{ required: true, message: 'Please select an owner' }]}
             >
-              <Select 
+              <UserDropdown 
                 placeholder="Select release owner"
                 style={{ 
                   borderRadius: token.borderRadius,
-                  fontSize: token.fontSizeSM
+                  fontSize: token.fontSizeSM,
+                  minHeight: '48px',
+                  height: '48px'
                 }}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {owners.map(owner => (
-                  <Option key={owner.value} value={owner.value}>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontSize: token.fontSizeSM }}>{owner.label}</span>
-                      <span style={{ fontSize: token.fontSizeXS, color: token.colorTextSecondary }}>
-                        {owner.email}
-                      </span>
-                    </div>
-                  </Option>
-                ))}
-              </Select>
+              />
             </Form.Item>
           </Col>
 
-          {/* Product */}
-          <Col span={24}>
-            <Form.Item
-              name="product"
-              label={
-                <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
-                  Product <Text style={{ color: token.colorRequired }}>*</Text>
-                </Text>
-              }
-              rules={[{ required: true, message: 'Please select a product' }]}
-            >
-              <Select 
-                placeholder="Select product"
-                style={{ 
-                  borderRadius: token.borderRadius,
-                  fontSize: token.fontSizeSM
-                }}
-              >
-                {products.map(product => (
-                  <Option key={product.value} value={product.value}>
-                    {product.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
 
           {/* Release Type */}
           <Col span={12}>
@@ -231,10 +162,13 @@ const NewReleaseDrawer = ({ open, onClose, onReleaseCreated }) => {
                   borderRadius: token.borderRadius,
                   fontSize: token.fontSizeSM
                 }}
+                loading={typeLoading}
+                disabled={typeLoading}
+                notFoundContent={typeLoading ? <DefaultLoader height="40px" /> : "No types found"}
               >
-                {releaseTypes.map(type => (
-                  <Option key={type.value} value={type.value}>
-                    {type.label}
+                {typeOptions.map((typeOption) => (
+                  <Option key={typeOption.value} value={typeOption.value}>
+                    {typeOption.label}
                   </Option>
                 ))}
               </Select>
@@ -258,13 +192,37 @@ const NewReleaseDrawer = ({ open, onClose, onReleaseCreated }) => {
                   borderRadius: token.borderRadius,
                   fontSize: token.fontSizeSM
                 }}
+                loading={statusLoading}
+                disabled={statusLoading}
+                notFoundContent={statusLoading ? <DefaultLoader height="40px" /> : "No statuses found"}
               >
-                {statuses.map(status => (
-                  <Option key={status.value} value={status.value}>
-                    {status.label}
+                {statusOptions.map((statusOption) => (
+                  <Option key={statusOption.value} value={statusOption.value}>
+                    {statusOption.label}
                   </Option>
                 ))}
               </Select>
+            </Form.Item>
+          </Col>
+
+          {/* Target Release Date */}
+          <Col span={24}>
+            <Form.Item
+              name="targetReleaseDate"
+              label={
+                <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
+                  Target Release Date <Text style={{ color: token.colorRequired }}>*</Text>
+                </Text>
+              }
+              rules={[{ required: true, message: 'Please select target release date' }]}
+            >
+              <Input 
+                type="date"
+                style={{ 
+                  borderRadius: token.borderRadius,
+                  fontSize: token.fontSizeSM
+                }}
+              />
             </Form.Item>
           </Col>
 

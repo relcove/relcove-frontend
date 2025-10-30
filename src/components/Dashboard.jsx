@@ -1,41 +1,14 @@
-import React, { useState } from 'react';
-import { Row, Col, theme, Typography, Button, Space } from 'antd';
-import { Plus } from 'lucide-react';
+import React from 'react';
+import { Row, Col, theme, Typography} from 'antd';
 import ActiveReleasesWidget from './widgets/ActiveReleasesWidget';
 import CustomerIssuesWidget from './widgets/CustomerIssuesWidget';
 import FeaturesOverviewWidget from './widgets/FeaturesOverviewWidget';
 import TestResultsWidget from './widgets/TestResultsWidget';
-import NewProductDrawer from './NewProductDrawer';
-import ProductSelector from './ProductSelector';
 
 const { Title, Text } = Typography;
 
 const Dashboard = () => {
   const { token } = theme.useToken();
-  const [selectedProduct, setSelectedProduct] = useState('web-application');
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Mock products data
-  const products = [
-    { value: 'web-application', label: 'Web Application' },
-    { value: 'mobile-app', label: 'Mobile App' },
-    { value: 'api-service', label: 'API Service' },
-    { value: 'desktop-app', label: 'Desktop App' }
-  ];
-
-  const handleNewProduct = () => {
-    setDrawerOpen(true);
-  };
-
-  const handleProductCreated = (newProduct) => {
-    // Add the new product to the list
-    products.push({
-      value: newProduct.id,
-      label: newProduct.name
-    });
-    // Optionally switch to the new product
-    setSelectedProduct(newProduct.id);
-  };
 
   return (
     <div style={{ backgroundColor: token.colorBgContainer }}>
@@ -68,28 +41,6 @@ const Dashboard = () => {
               Real-time overview of releases, issues, features, and tests
             </Text>
           </div>
-
-          {/* Right side - Product Selector and New Product Button */}
-          <Space size="middle" style={{ alignItems: 'center' }}>
-            <ProductSelector
-              selectedProduct={selectedProduct}
-              onProductChange={setSelectedProduct}
-              showLabel={true}
-              width={160}
-              size="middle"
-            />
-            <Button 
-              type="primary" 
-              icon={<Plus size={16} />}
-              onClick={handleNewProduct}
-              style={{
-                borderRadius: token.borderRadius,
-                fontWeight: 500
-              }}
-            >
-              New Product
-            </Button>
-          </Space>
         </div>
       </div>
 
@@ -115,13 +66,6 @@ const Dashboard = () => {
           <TestResultsWidget />
         </Col>
       </Row>
-
-      {/* New Product Drawer */}
-      <NewProductDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onProductCreated={handleProductCreated}
-      />
     </div>
   );
 };

@@ -1,61 +1,84 @@
-import React, { useState } from 'react';
-import { Form, Input, Select, Space, theme, Typography, message, Row, Col } from 'antd';
-import { Plus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Select, Space, theme, Typography, Row, Col, App, Spin } from 'antd';
+import { Edit, Plus } from 'lucide-react';
 import GeneralDrawer from './GeneralDrawer';
 import { PRODUCT_ICONS, renderIconFromCode } from '../utils/productIcons.jsx';
 import { CancelButton, SaveButton } from './StandardButtons';
+import { useCreateProduct, useUpdateProduct } from '../services/products';
+import { useProductStatusEnum } from '../services/enums';
+import UserDropdown from './UserDropdown';
 
 const { Text } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
+const NewProductDrawer = ({ open, onClose, onProductCreated, editingProduct = null }) => {
   const { token } = theme.useToken();
+  const { message } = App.useApp();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
+  const { data: statusOptions = [], isLoading: statusLoading, error: statusError } = useProductStatusEnum();
+  
+  const isEditing = !!editingProduct;
 
-  // Mock users data for Owner/Lead selection
-  const users = [
-    { value: 'john-doe', label: 'John Doe', email: 'john@company.com' },
-    { value: 'jane-smith', label: 'Jane Smith', email: 'jane@company.com' },
-    { value: 'mike-wilson', label: 'Mike Wilson', email: 'mike@company.com' },
-    { value: 'sarah-chen', label: 'Sarah Chen', email: 'sarah@company.com' },
-    { value: 'alex-brown', label: 'Alex Brown', email: 'alex@company.com' }
-  ];
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (open && editingProduct) {
+      form.setFieldsValue({
+        product_name: editingProduct.product_name,
+        product_identifier: editingProduct.product_identifier,
+        description: editingProduct.description || '',
+        owner: editingProduct.owner,
+        product_icon: editingProduct.product_icon,
+        status: editingProduct.status || 'Active',
+      });
+    } else if (open && !editingProduct) {
+      // Reset form for new product
+      form.resetFields();
+    }
+  }, [open, editingProduct, form]);
 
   const handleSubmit = async (values) => {
-    setLoading(true);
-    try {
-      // Mock API call to create new product
-      const response = await fetch('/api/v1/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: values.productName,
-          identifier: values.productIdentifier,
-          description: values.description || '',
-          owner: values.owner,
-          icon: values.productIcon,
-          status: 'active'
-        }),
-      });
+    const productData = {
+      product_name: values.product_name,
+      product_identifier: values.product_identifier,
+      description: values.description || '',
+      owner: values.owner,
+      product_icon: values.product_icon,
+      status: values.status || 'Active'
+    };
 
-      if (response.ok) {
-        const newProduct = await response.json();
-        message.success('Product created successfully!');
-        form.resetFields();
-        onClose();
-        onProductCreated(newProduct);
-      } else {
-        throw new Error('Failed to create product');
-      }
-    } catch (error) {
-      console.error('Error creating product:', error);
-      message.error('Failed to create product. Please try again.');
-    } finally {
-      setLoading(false);
+    if (isEditing) {
+      // Update existing product
+      updateProductMutation.mutate({
+        productId: editingProduct.product_id,
+        productData: productData
+      }, {
+        onSuccess: () => {
+          message.success('Product updated successfully!');
+          form.resetFields();
+          onClose();
+        },
+        onError: (error) => {
+          console.error('Error updating product:', error);
+          message.error(error.message || 'Failed to update product. Please try again.');
+        }
+      });
+    } else {
+      // Create new product
+      createProductMutation.mutate(productData, {
+        onSuccess: (newProduct) => {
+          message.success('Product created successfully!');
+          form.resetFields();
+          onClose();
+          onProductCreated(newProduct);
+        },
+        onError: (error) => {
+          console.error('Error creating product:', error);
+          message.error(error.message || 'Failed to create product. Please try again.');
+        }
+      });
     }
   };
 
@@ -68,10 +91,10 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
     <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
       <CancelButton onClick={handleCancel} />
       <SaveButton 
-        loading={loading}
+        loading={isEditing ? updateProductMutation.isPending : createProductMutation.isPending}
         onClick={() => form.submit()}
       >
-        Create Product
+        {isEditing ? 'Update Product' : 'Create Product'}
       </SaveButton>
     </Space>
   );
@@ -80,8 +103,8 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
     <GeneralDrawer
       open={open}
       onClose={handleCancel}
-      title="Add Product"
-      icon={<Plus size={16} color="white" />}
+      title={isEditing ? "Edit Product" : "Add Product"}
+      icon={isEditing ? <Edit size={16} color="white" /> : <Plus size={16} color="white" />}
       footer={footer}
     >
       <div style={{ marginBottom: '20px' }}>
@@ -104,7 +127,7 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
           {/* Product Name */}
           <Col span={24}>
             <Form.Item
-              name="productName"
+              name="product_name"
               label={
                 <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
                   Product Name <Text style={{ color: token.colorRequired }}>*</Text>
@@ -129,7 +152,7 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
           {/* Product Identifier */}
           <Col span={24}>
             <Form.Item
-              name="productIdentifier"
+              name="product_identifier"
               label={
                 <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
                   Product Identifier <Text style={{ color: token.colorRequired }}>*</Text>
@@ -138,15 +161,15 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
               rules={[
                 { required: true, message: 'Please enter product identifier' },
                 { 
-                  pattern: /^[a-z0-9-]+$/, 
-                  message: 'Identifier must contain only lowercase letters, numbers, and hyphens' 
+                  pattern: /^[A-Z0-9-]+$/, 
+                  message: 'Identifier must contain only uppercase letters, numbers, and hyphens' 
                 },
                 { min: 2, message: 'Identifier must be at least 2 characters' },
                 { max: 30, message: 'Identifier must be less than 30 characters' }
               ]}
             >
               <Input 
-                placeholder="e.g., web-app, mobile-app, api-service"
+                placeholder="e.g., WEBAPP, MOBILE-APP, API-SERVICE"
                 style={{ 
                   borderRadius: token.borderRadius,
                   fontSize: token.fontSizeSM
@@ -154,7 +177,32 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
               />
             </Form.Item>
           </Col>
-
+          
+          <Col span={24}>
+            <Form.Item
+              name="description"
+              label={
+                <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
+                  Description
+                </Text>
+              }
+              rules={[
+                { max: 500, message: 'Description must be less than 500 characters' }
+              ]}
+            >
+              <TextArea 
+                placeholder="Brief description of the product..."
+                rows={3}
+                style={{ 
+                  borderRadius: token.borderRadius,
+                  fontSize: token.fontSizeSM
+                }}
+                showCount
+                maxLength={500}
+              />
+            </Form.Item>
+          </Col>
+          
           {/* Owner/Lead */}
           <Col span={24}>
             <Form.Item
@@ -166,36 +214,22 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
               }
               rules={[{ required: true, message: 'Please select an owner' }]}
             >
-              <Select 
+              <UserDropdown 
                 placeholder="Select product owner"
                 style={{ 
                   borderRadius: token.borderRadius,
-                  fontSize: token.fontSizeSM
+                  fontSize: token.fontSizeSM,
+                  minHeight: '48px',
+                  height: '48px'
                 }}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {users.map(user => (
-                  <Option key={user.value} value={user.value}>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontSize: token.fontSizeSM }}>{user.label}</span>
-                      <span style={{ fontSize: token.fontSizeXS, color: token.colorTextSecondary }}>
-                        {user.email}
-                      </span>
-                    </div>
-                  </Option>
-                ))}
-              </Select>
+              />
             </Form.Item>
           </Col>
 
           {/* Product Icon */}
           <Col span={24}>
             <Form.Item
-              name="productIcon"
+              name="product_icon"
               label={
                 <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
                   Product Icon <Text style={{ color: token.colorRequired }}>*</Text>
@@ -237,31 +271,38 @@ const NewProductDrawer = ({ open, onClose, onProductCreated }) => {
             </Form.Item>
           </Col>
 
-          {/* Description */}
-          <Col span={24}>
-            <Form.Item
-              name="description"
-              label={
-                <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
-                  Description
-                </Text>
-              }
-              rules={[
-                { max: 500, message: 'Description must be less than 500 characters' }
-              ]}
-            >
-              <TextArea 
-                placeholder="Brief description of the product..."
-                rows={3}
-                style={{ 
-                  borderRadius: token.borderRadius,
-                  fontSize: token.fontSizeSM
-                }}
-                showCount
-                maxLength={500}
-              />
-            </Form.Item>
-          </Col>
+          {/* Status - Only show when editing */}
+          {isEditing && (
+            <Col span={24}>
+              <Form.Item
+                name="status"
+                label={
+                  <Text style={{ fontSize: token.fontSizeSM, fontWeight: 500, color: token.colorFormLabel }}>
+                    Status <Text style={{ color: token.colorRequired }}>*</Text>
+                  </Text>
+                }
+                rules={[{ required: true, message: 'Please select a status' }]}
+                initialValue="Active"
+              >
+                <Select 
+                  placeholder="Select product status"
+                  style={{ 
+                    borderRadius: token.borderRadius,
+                    fontSize: token.fontSizeSM
+                  }}
+                  loading={statusLoading}
+                  disabled={statusLoading || statusError}
+                  notFoundContent={statusLoading ? <Spin size="small" /> : "No status options found"}
+                >
+                  {statusOptions.map((statusOption) => (
+                    <Option key={statusOption.value} value={statusOption.value}>
+                      {statusOption.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          )}
         </Row>
       </Form>
     </GeneralDrawer>

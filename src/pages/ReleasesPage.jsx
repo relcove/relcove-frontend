@@ -11,7 +11,7 @@ import {
   theme,
   Progress,
 } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Rocket,
   Plus,
@@ -29,162 +29,67 @@ import {
 } from "lucide-react";
 import { PrimaryButton, SecondaryButton } from "../components/StandardButtons";
 import NewReleaseDrawer from "../components/NewReleaseDrawer";
-import ProductSelector from "../components/ProductSelector";
+import { useReleases, useCreateRelease } from "../services/releases";
+import { useProducts } from "../services/products";
+import { useUsersContext } from "../providers/UsersProvider";
+import { App } from "antd";
+import DefaultLoader from "../components/DefaultLoader";
+import EmptyState from "../components/EmptyState";
+import { formatDate, getDaysToRelease, calculateReleaseHealth, generateInitials } from "../utils/helpers";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const ReleasesPage = () => {
   const { token } = theme.useToken();
+  const { message } = App.useApp();
   const navigate = useNavigate();
+  const { productId } = useParams();
   const [releaseType, setReleaseType] = useState("all");
-  const [selectedProduct, setSelectedProduct] = useState("web-application");
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Mock data for releases with random test types
-  const releases = [
-    {
-      id: "release-1",
-      version: "v2.4.1",
-      build: "b847",
-      status: "rc",
-      statusColor: "blue",
-      health: 87,
-      codeFreezeDate: "2024-02-15",
-      releaseDate: "2024-02-28",
-      daysToRelease: 12,
-      qaLead: { name: "Sarah Chen", initials: "SC", avatar: null },
-      pendingBlockers: 3,
-      testResults: [
-        { type: "Unit Tests", build: "b847", passRate: 94 },
-        { type: "Integration Tests", build: "b845", passRate: 89 },
-        { type: "E2E Tests", build: "b843", passRate: 76 },
-        { type: "Performance Tests", build: "b841", passRate: 92 },
-      ],
-      security: { issues: 8, critical: 1 },
-      lastUpdated: "2 hours ago",
-      featuresHealth: {
-        healthy: 12,
-        atRisk: 3,
-        inProgress: 5,
-      },
-    },
-    {
-      id: "release-2",
-      version: "v2.3.2",
-      build: "b623",
-      status: "development",
-      statusColor: "orange",
-      health: 72,
-      codeFreezeDate: "2024-03-01",
-      releaseDate: "2024-03-15",
-      daysToRelease: 28,
-      qaLead: { name: "Mike Wilson", initials: "MW", avatar: null },
-      pendingBlockers: 7,
-      testResults: [
-        { type: "API Tests", build: "b623", passRate: 85 },
-        { type: "UI Tests", build: "b621", passRate: 78 },
-        { type: "Load Tests", build: "b619", passRate: 91 },
-        { type: "Security Tests", build: "b617", passRate: 67 },
-      ],
-      security: { issues: 15, critical: 3 },
-      lastUpdated: "4 hours ago",
-      featuresHealth: {
-        healthy: 8,
-        atRisk: 7,
-        inProgress: 8,
-      },
-    },
-    {
-      id: "release-3",
-      version: "v2.5.0",
-      build: "b156",
-      status: "planning",
-      statusColor: "gray",
-      health: 45,
-      codeFreezeDate: "2024-04-01",
-      releaseDate: "2024-04-20",
-      daysToRelease: 45,
-      qaLead: { name: "Alex Brown", initials: "AB", avatar: null },
-      pendingBlockers: 12,
-      testResults: [
-        { type: "Smoke Tests", build: "b156", passRate: 88 },
-        { type: "Regression Tests", build: "b154", passRate: 82 },
-        { type: "Compatibility Tests", build: "b152", passRate: 95 },
-        { type: "Accessibility Tests", build: "b150", passRate: 73 },
-      ],
-      security: { issues: 22, critical: 5 },
-      lastUpdated: "1 day ago",
-      featuresHealth: {
-        healthy: 5,
-        atRisk: 10,
-        inProgress: 12,
-      },
-    },
-    {
-      id: "release-4",
-      version: "v2.2.3",
-      build: "b934",
-      status: "rc",
-      statusColor: "blue",
-      health: 95,
-      codeFreezeDate: "2024-01-20",
-      releaseDate: "2024-02-05",
-      daysToRelease: 3,
-      qaLead: { name: "Emma Davis", initials: "ED", avatar: null },
-      pendingBlockers: 1,
-      testResults: [
-        { type: "Functional Tests", build: "b934", passRate: 97 },
-        { type: "Database Tests", build: "b932", passRate: 96 },
-        { type: "Mobile Tests", build: "b930", passRate: 89 },
-        { type: "Cross-browser Tests", build: "b928", passRate: 94 },
-      ],
-      security: { issues: 4, critical: 0 },
-      lastUpdated: "30 minutes ago",
-      featuresHealth: {
-        healthy: 15,
-        atRisk: 1,
-        inProgress: 2,
-      },
-    },
-    {
-      id: "release-5",
-      version: "v2.6.0",
-      build: "b78",
-      status: "development",
-      statusColor: "orange",
-      health: 68,
-      codeFreezeDate: "2024-05-01",
-      releaseDate: "2024-05-25",
-      daysToRelease: 62,
-      qaLead: { name: "David Lee", initials: "DL", avatar: null },
-      pendingBlockers: 9,
-      testResults: [
-        { type: "Contract Tests", build: "b78", passRate: 79 },
-        { type: "Visual Tests", build: "b76", passRate: 84 },
-        { type: "Stress Tests", build: "b74", passRate: 71 },
-        { type: "Chaos Tests", build: "b72", passRate: 66 },
-      ],
-      security: { issues: 18, critical: 2 },
-      lastUpdated: "6 hours ago",
-      featuresHealth: {
-        healthy: 6,
-        atRisk: 8,
-        inProgress: 9,
-      },
-    },
-  ];
+  
+  // API hooks
+  const { data: releases = [], isLoading: releasesLoading, error: releasesError } = useReleases(productId);
+  const { data: products = [] } = useProducts();
+  const { users, getUserByClerkId } = useUsersContext();
+  const createReleaseMutation = useCreateRelease();
+  
+  // Get current product info
+  const currentProduct = products.find(p => p.product_id === productId);
 
   const getStatusIcon = (status) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "rc":
+      case "release candidate":
         return <CheckCircle size={12} color={token.colorPrimary} />;
       case "development":
         return <Clock size={12} color={token.colorWarning} />;
       case "planning":
         return <AlertCircle size={12} color={token.colorTextTertiary} />;
+      case "testing":
+        return <TestTube size={12} color={token.colorInfo} />;
+      case "released":
+        return <CheckCircle size={12} color={token.colorSuccess} />;
       default:
         return <Clock size={12} color={token.colorTextTertiary} />;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "rc":
+      case "release candidate":
+        return "blue";
+      case "development":
+        return "orange";
+      case "planning":
+        return "gray";
+      case "testing":
+        return "cyan";
+      case "released":
+        return "green";
+      default:
+        return "gray";
     }
   };
 
@@ -206,9 +111,32 @@ const ReleasesPage = () => {
     return token.colorError;
   };
 
+  // Helper function to get user info by clerk_id
+  const getUserInfo = (clerkId) => {
+    const user = getUserByClerkId(clerkId);
+    return user ? {
+      name: user.fullName,
+      initials: generateInitials(user.fullName),
+      avatar: user.image_url
+    } : {
+      name: "Unknown User",
+      initials: "UU",
+      avatar: null
+    };
+  };
+
+  // Mock health calculation (you might want to implement this based on actual metrics)
+  const calculateHealth = (release) => {
+    // This is a mock calculation - replace with actual health metrics
+    const baseHealth = 70;
+    const statusBonus = release.status === 'rc' ? 20 : release.status === 'development' ? 10 : 0;
+    const daysBonus = Math.max(0, 20 - Math.abs(getDaysToRelease(release.target_release_date) || 0));
+    return Math.min(100, baseHealth + statusBonus + daysBonus);
+  };
+
   const filteredReleases = releases.filter((release) => {
     if (releaseType === "all") return true;
-    return release.status === releaseType;
+    return release.status?.toLowerCase() === releaseType;
   });
 
   const handleNewRelease = () => {
@@ -216,14 +144,43 @@ const ReleasesPage = () => {
   };
 
   const handleReleaseCreated = (newRelease) => {
-    // Add the new release to the list
-    releases.push(newRelease);
+    message.success('Release created successfully!');
     setDrawerOpen(false);
+    // React Query will automatically refetch and update the list
   };
 
   const handleReleaseClick = (releaseId) => {
-    navigate(`/releases/${releaseId}`);
+    navigate(`/products/${productId}/releases/${releaseId}`);
   };
+
+  // Loading state
+  if (releasesLoading) {
+    return <DefaultLoader />;
+  }
+
+  // Error state
+  if (releasesError) {
+    return (
+      <div style={{ 
+        padding: "24px", 
+        backgroundColor: token.colorBgContainer,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '400px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <AlertTriangle size={48} color={token.colorError} style={{ marginBottom: '16px' }} />
+          <Title level={3} style={{ color: token.colorError }}>
+            Failed to load releases
+          </Title>
+          <Text style={{ color: token.colorTextSecondary }}>
+            {releasesError.message || 'Something went wrong. Please try again.'}
+          </Text>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: "24px", backgroundColor: token.colorBgContainer }}>
@@ -263,16 +220,6 @@ const ReleasesPage = () => {
               </Text>
             </div>
 
-            {/* Right side - Product Selector */}
-            <div>
-              <ProductSelector
-                selectedProduct={selectedProduct}
-                onProductChange={setSelectedProduct}
-                showLabel={true}
-                width={180}
-                size="middle"
-              />
-            </div>
           </div>
         </div>
 
@@ -337,7 +284,7 @@ const ReleasesPage = () => {
                   color: token.colorText,
                 }}
               >
-                101
+                {filteredReleases.filter((r) => r.status === "rc").length}
               </Text>
                 <CheckCircle size={20} color={token.colorSuccess} />
               
@@ -397,20 +344,42 @@ const ReleasesPage = () => {
 
       {/* Release Cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        {filteredReleases.map((release) => (
-          <Card
-            key={release.id}
-            hoverable
-            onClick={() => handleReleaseClick(release.id)}
-            style={{
-              borderRadius: token.borderRadiusLG,
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-              border: `1px solid ${token.colorBorderSecondary}`,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            bodyStyle={{ padding: "16px" }}
-          >
+        {filteredReleases.length === 0 ? (
+          <EmptyState
+            icon="plus"
+            title="No releases found"
+            description={releaseType === "all" 
+              ? "No releases have been created yet." 
+              : `No releases found with status "${releaseType}".`
+            }
+            actionLabel="Create Release"
+            onAction={handleNewRelease}
+            showAction={true}
+            showRefresh={true}
+            onRefresh={() => window.location.reload()}
+            size="medium"
+          />
+        ) : (
+          filteredReleases.map((release) => {
+            const userInfo = getUserInfo(release.owner);
+            const statusColor = getStatusColor(release.status);
+            const health = calculateReleaseHealth(release);
+            const daysToRelease = getDaysToRelease(release.target_release_date);
+            
+            return (
+              <Card
+                key={release.release_id}
+                hoverable
+                onClick={() => handleReleaseClick(release.release_id)}
+                style={{
+                  borderRadius: token.borderRadiusLG,
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+                  border: `1px solid ${token.colorBorderSecondary}`,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                bodyStyle={{ padding: "16px" }}
+              >
             <Row gutter={[16, 12]} align="top">
               {/* Left Section - Icon & Version */}
               <Col xs={24} sm={6} md={3}>
@@ -422,10 +391,12 @@ const ReleasesPage = () => {
                         height: "60px",
                         borderRadius: "50%",
                         backgroundColor:
-                          release.statusColor === "blue"
+                          statusColor === "blue"
                             ? token.colorPrimaryBg
-                            : release.statusColor === "orange"
+                            : statusColor === "orange"
                             ? token.colorWarningBg
+                            : statusColor === "green"
+                            ? token.colorSuccessBg
                             : token.colorFillTertiary,
                         display: "flex",
                         alignItems: "center",
@@ -437,10 +408,12 @@ const ReleasesPage = () => {
                       <Rocket
                         size={30}
                         color={
-                          release.statusColor === "blue"
+                          statusColor === "blue"
                             ? token.colorPrimary
-                            : release.statusColor === "orange"
+                            : statusColor === "orange"
                             ? token.colorWarning
+                            : statusColor === "green"
+                            ? token.colorSuccess
                             : token.colorTextTertiary
                         }
                       />
@@ -458,7 +431,7 @@ const ReleasesPage = () => {
                         letterSpacing: "-0.025em",
                       }}
                     >
-                      {release.version}
+                      {release.name}
                     </Title>
                     <Text
                       style={{
@@ -467,7 +440,7 @@ const ReleasesPage = () => {
                         fontFamily: token.fontFamily,
                       }}
                     >
-                      Build {release.build}
+                      {release.latest_build_number ? `Build ${release.latest_build_number}` : 'No build'}
                     </Text>
                   </Col>
                 </Row>
@@ -503,9 +476,9 @@ const ReleasesPage = () => {
                   >
                     <Progress
                       type="circle"
-                      percent={release.health}
+                      percent={health}
                       size={72}
-                      strokeColor={getHealthColor(release.health)}
+                      strokeColor={getHealthColor(health)}
                       trailColor={token.colorBorderSecondary}
                       strokeWidth={8}
                       showInfo={false}
@@ -517,14 +490,14 @@ const ReleasesPage = () => {
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        color: getHealthColor(release.health),
+                        color: getHealthColor(health),
                         fontSize: token.fontSizeSM,
                         fontWeight: 600,
                         zIndex: 1,
                         fontFamily: token.fontFamilyHeading,
                       }}
                     >
-                      {release.health}%
+                      {health}%
                     </div>
                   </div>
                 </div>
@@ -596,7 +569,7 @@ const ReleasesPage = () => {
                             fontFamily: token.fontFamily,
                           }}
                         >
-                          {release.codeFreezeDate}
+                          {formatDate(release.target_release_date)}
                         </Text>
                       </div>
                     </div>
@@ -646,7 +619,7 @@ const ReleasesPage = () => {
                             fontFamily: token.fontFamily,
                           }}
                         >
-                          {release.releaseDate}
+                          {formatDate(release.actual_release_date || release.target_release_date)}
                         </Text>
                       </div>
                     </div>
@@ -666,64 +639,84 @@ const ReleasesPage = () => {
                       color: token.colorText,
                     }}
                   >
-                    Test Results
+                    Release Info
                   </Text>
-                  <Row gutter={[6, 6]}>
-                    {release.testResults.map((test, index) => (
-                      <Col span={12} key={index}>
-                        <div
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "8px 12px",
+                        backgroundColor: token.colorFillTertiary,
+                        borderRadius: token.borderRadiusSM,
+                        border: `1px solid ${token.colorBorderSecondary}`,
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <Text
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            padding: "6px 8px",
-                            backgroundColor: token.colorFillTertiary,
-                            borderRadius: token.borderRadiusSM,
-                            border: `1px solid ${token.colorBorderSecondary}`,
+                            fontSize: token.fontSizeXS,
+                            color: token.colorTextSecondary,
+                            fontFamily: token.fontFamily,
+                            display: "block",
+                            fontWeight: 500,
                           }}
                         >
-                          <div
+                          Release Type
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: token.fontSizeXS,
+                            color: token.colorText,
+                            fontFamily: token.fontFamily,
+                            fontWeight: 500,
+                          }}
+                        >
+                          {release.release_type || 'Not specified'}
+                        </Text>
+                      </div>
+                    </div>
+                    
+                    {release.tags && release.tags.length > 0 && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "8px 12px",
+                          backgroundColor: token.colorFillTertiary,
+                          borderRadius: token.borderRadiusSM,
+                          border: `1px solid ${token.colorBorderSecondary}`,
+                        }}
+                      >
+                        <div style={{ flex: 1 }}>
+                          <Text
                             style={{
-                              flex: "0 0 60px",
-                              textAlign: "center",
+                              fontSize: token.fontSizeXS,
+                              color: token.colorTextSecondary,
+                              fontFamily: token.fontFamily,
+                              display: "block",
+                              fontWeight: 500,
+                              marginBottom: "4px",
                             }}
                           >
-                            <Text
-                              style={{
-                                fontSize: token.fontSizeXL,
-                                fontWeight: 600,
-                                color: getPassRateColor(test.passRate),
-                                fontFamily: token.fontFamilyHeading,
-                              }}
-                            >
-                              {test.passRate}%
-                            </Text>
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <Text
-                              style={{
-                                fontSize: token.fontSizeXS,
-                                color: token.colorTextSecondary,
-                                fontFamily: token.fontFamily,
-                                display: "block",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {test.type}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: token.fontSizeXS,
-                                color: token.colorTextTertiary,
-                                fontFamily: token.fontFamily,
-                              }}
-                            >
-                              {test.build}
-                            </Text>
+                            Tags
+                          </Text>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                            {release.tags.slice(0, 3).map((tag, index) => (
+                              <Tag key={index} size="small" color="blue">
+                                {tag}
+                              </Tag>
+                            ))}
+                            {release.tags.length > 3 && (
+                              <Tag size="small" color="default">
+                                +{release.tags.length - 3} more
+                              </Tag>
+                            )}
                           </div>
                         </div>
-                      </Col>
-                    ))}
-                  </Row>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -744,7 +737,7 @@ const ReleasesPage = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "16px" }}
               >
-                {/* QA Lead */}
+                {/* Owner */}
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "8px" }}
                 >
@@ -755,7 +748,7 @@ const ReleasesPage = () => {
                       fontFamily: token.fontFamily,
                     }}
                   >
-                    QA Lead:
+                    Owner:
                   </Text>
 
                   <Text
@@ -766,29 +759,26 @@ const ReleasesPage = () => {
                       color: token.colorText,
                     }}
                   >
-                    {release.qaLead.name}
+                    {userInfo.name}
                   </Text>
                 </div>
 
-                {/* Blockers */}
+                {/* Status */}
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "3px" }}
                 >
-                  <AlertCircle
-                    size={14}
-                    color={getBlockerColor(release.pendingBlockers)}
-                  />
+                  {getStatusIcon(release.status)}
                   <div>
                     <Text
                       style={{
                         fontSize: token.fontSizeXS,
                         fontWeight: 500,
-                        color: getBlockerColor(release.pendingBlockers),
+                        color: token.colorText,
                         fontFamily: token.fontFamilyHeading,
                         display: "block",
                       }}
                     >
-                      {release.pendingBlockers} Blockers
+                      {release.status}
                     </Text>
                   </div>
                 </div>
@@ -800,7 +790,7 @@ const ReleasesPage = () => {
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "4px" }}
                 >
-                  <Shield size={14} color={token.colorError} />
+                  <Calendar size={14} color={token.colorTextSecondary} />
                   <Text
                     style={{
                       fontSize: token.fontSizeXS,
@@ -808,7 +798,7 @@ const ReleasesPage = () => {
                       fontFamily: token.fontFamily,
                     }}
                   >
-                    {release.security.issues} security issues
+                    Created {formatDate(release.created_at)}
                   </Text>
                 </div>
 
@@ -826,14 +816,17 @@ const ReleasesPage = () => {
               </div>
             </div>
           </Card>
-        ))}
-      </div>
+          );
+        })
+      )}
+    </div>
 
       {/* New Release Drawer */}
       <NewReleaseDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onReleaseCreated={handleReleaseCreated}
+        productId={productId}
       />
     </div>
   );

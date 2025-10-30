@@ -1,0 +1,298 @@
+/* Data Filters Drawer Styles */
+.drawer {
+  position: fixed;
+  top: 64px; /* Start below header */
+  right: -800px;
+  width: 800px;
+  max-width: calc(100% - 40px);
+  height: calc(100vh - 64px); /* Full height minus header */
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  overflow-y: auto;
+  padding-top: 20px; /* Added padding top */
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer.closed {
+  right: -800px;
+}
+
+.drawerContent {
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.headerIcon {
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.title {
+  margin: 0 !important;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Filters Section */
+.filtersSection {
+  margin-bottom: 24px;
+}
+
+.filterGroup {
+  margin-bottom: 16px;
+}
+
+.filterLabel {
+  display: block;
+  color: #374151;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.select {
+  width: 100%;
+}
+
+.select :global(.ant-select-selector) {
+  border-radius: 8px !important;
+  border: 1px solid #d1d5db !important;
+  padding: 8px 12px !important;
+  height: 40px !important;
+}
+
+.select :global(.ant-select-selector:hover) {
+  border-color: #3b82f6 !important;
+}
+
+.select :global(.ant-select-focused .ant-select-selector) {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+}
+
+.chevron {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Search Section */
+.searchSection {
+  margin-bottom: 24px;
+}
+
+.searchInput {
+  width: 100%;
+}
+
+.searchInput :global(.ant-input) {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  height: 40px;
+}
+
+.searchInput :global(.ant-input:hover) {
+  border-color: #3b82f6;
+}
+
+.searchInput :global(.ant-input:focus) {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.searchIcon {
+  color: #6b7280;
+}
+
+/* Table Section */
+.tableSection {
+  flex: 1;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table :global(.ant-table-thead > tr > th) {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #374151;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+
+.table :global(.ant-table-tbody > tr > td) {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+
+.table :global(.ant-table-tbody > tr:hover > td) {
+  background-color: #f8f9fa;
+}
+
+.table :global(.ant-table-tbody > tr:last-child > td) {
+  border-bottom: none;
+}
+
+/* Labels Container */
+.labelsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+.labelTag {
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  margin: 1px !important;
+  line-height: 1.2 !important;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Toggle Button */
+.toggleButton {
+  position: fixed !important;
+  top: 50% !important;
+  right: 20px !important;
+  transform: translateY(-50%) !important;
+  width: 50px !important;
+  height: 50px !important;
+  background: white !important;
+  border: 2px solid #e5e7eb;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+  z-index: 1001 !important;
+}
+
+.toggleButton:hover {
+  background: #f8f9fa !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-50%) scale(1.05) !important;
+}
+
+.toggleButton.open {
+  right: calc(min((calc(100% - 40px)), 800px) - 20px) !important;
+}
+
+.toggleIcon {
+  color: #374151 !important;
+  transition: all 0.2s ease !important;
+}
+
+.toggleButton:hover .toggleIcon {
+  color: #3b82f6 !important;
+}
+
+/* Loading and Error States */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.loadingText {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .drawer {
+    width: 100%;
+    right: -100%;
+  }
+  
+  .toggleButton.open {
+    right: 20px;
+  }
+  
+  .drawerContent {
+    padding: 16px;
+  }
+}
+
+/* Chat Slide Animation */
+.chatContainer {
+  transition: margin-right 0.3s ease-in-out;
+}
+
+.chatContainer.drawerOpen {
+  margin-right: 800px;
+}
+
+@media (max-width: 768px) {
+  .chatContainer.drawerOpen {
+    margin-right: 0;
+  }
+}

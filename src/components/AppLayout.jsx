@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Layout,
   Avatar,
@@ -8,10 +8,12 @@ import {
   theme,
   Row,
   Col,
+  Drawer,
 } from "antd";
-import { ChevronsRight, ChevronsLeft } from "lucide-react";
+import { PanelLeft, PanelLeftClose, Menu } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
 import { UserButton, useUser, OrganizationSwitcher } from "@clerk/clerk-react";
+import { useLocation } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -20,13 +22,47 @@ const { useToken } = theme;
 const AppLayout = ({ children }) => {
   const { token } = useToken();
   const { user } = useUser();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(
     localStorage.getItem("siderCollapsed") === "true"
   );
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   // Check if user has organization membership
   const hasOrganization = user?.organizationMemberships?.length > 0;
   const shouldShowSidebar = hasOrganization;
+
+  // Handle mobile responsiveness
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Get current section name based on path
+  const getCurrentSectionName = () => {
+    const path = location.pathname;
+    // Handle product-based routes
+    if (path.includes('/products/')) {
+      if (path.match(/\/products\/[^\/]+$/) || path.includes('/releases') || path.includes('/issues')) {
+        return "GENERAL";
+      }
+    }
+    // Handle admin routes (no product prefix)
+    if (path === "/settings" || path === "/integrations") {
+      return "ADMIN";
+    }
+    // Handle legacy routes
+    if (path === "/" || path === "/releases" || path === "/issues") {
+      return "GENERAL";
+    }
+    return "GENERAL";
+  };
 
   const handleSiderCollapse = () => {
     const newCollapsedState = !collapsed;
@@ -38,27 +74,28 @@ const AppLayout = ({ children }) => {
     <Layout
       style={{
         minHeight: "100vh",
-        backgroundColor: token.colorBgContainer,
+        backgroundColor: "#f5f5f5",
         padding: "10px 0 0 0",
       }}
     >
-      {/* Left Sidebar */}
-      <Sider
-        trigger={null}
-        collapsible={true}
-        collapsed={collapsed}
-        style={{
-          background: token.colorBgContainer,
-          overflow: "hidden",
-          height: "calc(100vh - 20px)",
-          position: "fixed",
-          left: 0,
-          top: "20px",
-          bottom: 0,
-        }}
-        width={200}
-        collapsedWidth={80}
-      >
+      {/* Desktop Left Sidebar - Hidden on mobile */}
+      {!isMobile && (
+        <Sider
+          trigger={null}
+          collapsible={true}
+          collapsed={collapsed}
+          style={{
+            background: "#fafafa",
+            overflow: "hidden",
+            height: "calc(100vh - 20px)",
+            position: "fixed",
+            left: 0,
+            top: "20px",
+            bottom: 0,
+          }}
+          width={200}
+          collapsedWidth={80}
+        >
         {/* R Logo */}
         <div
           style={{
@@ -119,51 +156,63 @@ const AppLayout = ({ children }) => {
             </div>
           )}
 
-          {/* Collapse Button */}
-          <div
-            style={{
-              padding: "0 20px",
-              position: "absolute",
-              bottom: "20px",
-              right: "-10px",
-            }}
-          >
-            <Button
-              type="text"
-              onClick={handleSiderCollapse}
-              style={{
-                width: "100%",
-                height: "40px",
-                borderRadius: token.borderRadius,
-                backgroundColor: token.colorBgLayout,
-                border: `1px solid ${token.colorBorderSecondary}`,
-                color: token.colorTextSecondary,
-                fontSize: token.fontSizeXs,
-                fontWeight: token.fontWeightMedium,
-              }}
-            >
-              {collapsed ? (
-                <ChevronsRight size={16} />
-              ) : (
-                <ChevronsLeft size={16} />
-              )}
-            </Button>
-          </div>
         </div>
-      </Sider>
+        </Sider>
+      )}
+
+      {/* Mobile Hamburger Menu Button */}
+      {isMobile && (
+        <Button
+          type="text"
+          onClick={() => setMobileDrawerOpen(true)}
+          style={{
+            position: "fixed",
+            top: "30px",
+            left: "20px",
+            zIndex: 1001,
+            width: "40px",
+            height: "40px",
+            borderRadius: token.borderRadius,
+            backgroundColor: "white",
+            border: `1px solid ${token.colorBorderSecondary}`,
+            color: token.colorTextSecondary,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Menu size={20} />
+        </Button>
+      )}
+
+      {/* Mobile Drawer */}
+      {isMobile && (
+        <Drawer
+          title="Relcove"
+          placement="left"
+          onClose={() => setMobileDrawerOpen(false)}
+          open={mobileDrawerOpen}
+          bodyStyle={{ padding: 0 }}
+          width={250}
+        >
+          {shouldShowSidebar && <SidebarMenu collapsed={false} />}
+        </Drawer>
+      )}
 
       {/* Main Content Area */}
       <Layout
         style={{
-          marginLeft: collapsed ? 80 : 200,
+          marginLeft: isMobile ? 0 : (collapsed ? 80 : 200),
           marginTop: "20px",
-          backgroundColor: token.colorBgContainer,
+          backgroundColor: "#ffffff",
           transition: "margin-left 0.2s ease",
           borderRadius: "10px 0 0 0",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
+          boxShadow: "4px 0 8px rgba(0, 0, 0, 0.08)",
           minHeight: "calc(100vh - 40px)",
           overflow: "hidden",
         }}
+        className="app-layout-content"
       >
         {/* Top Header Bar */}
         <Header
@@ -174,18 +223,41 @@ const AppLayout = ({ children }) => {
             lineHeight: "64px",
             position: "fixed",
             top: "20px",
-            left: collapsed ? "80px" : "200px",
+            left: isMobile ? "0" : (collapsed ? "80px" : "200px"),
             right: "0",
             zIndex: 999,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: "10px 0 0 0",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
             transition: "left 0.2s ease",
           }}
         >
-          <Col>
+          <Col style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <Button
+              type="text"
+              onClick={handleSiderCollapse}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: token.borderRadius,
+                backgroundColor: token.colorBgLayout,
+                border: `1px solid ${token.colorBorderSecondary}`,
+                color: token.colorTextSecondary,
+                fontSize: token.fontSizeXs,
+                fontWeight: token.fontWeightMedium,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 0,
+              }}
+            >
+              {collapsed ? (
+                <PanelLeft size={16} />
+              ) : (
+                <PanelLeftClose size={16} />
+              )}
+            </Button>
             <Title
               level={3}
               style={{
@@ -208,14 +280,15 @@ const AppLayout = ({ children }) => {
         <Content
           style={{
             paddingTop: 84, // 64px header + 20px margin
-            paddingLeft: 60,
-            paddingRight: "min(7%, 100px)",
-            margin: 0,
+            paddingLeft: isMobile?10:40,
+            paddingRight: isMobile?10:40,
+            width: "100%",
+            maxWidth: 1700,
+            margin: "0 auto",
             zIndex: 1,
             height: "calc(100vh - 104px)", // 20px top margin + 64px header + 20px bottom margin
             overflowY: "auto",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
-            background: theme.colorBgContainer,
+            background: "#ffffff",
           }}
         >
           {children}

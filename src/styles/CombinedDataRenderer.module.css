@@ -1,0 +1,512 @@
+/* CombinedDataRenderer.module.css */
+
+.combinedDataContainer {
+  margin: 0 0 16px 0;
+  max-width: 100%;
+}
+
+.titleSection {
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0 !important;
+  color: var(--ant-color-text);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tableCard {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--ant-color-border-secondary);
+}
+
+.modernTableCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tableTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tableIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.tableTitleText {
+  margin: 0 !important;
+  color: #374151;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* Custom table styling to match the design */
+.modernTableCard :global(.ant-table) {
+  border: none;
+}
+
+.modernTableCard :global(.ant-table-thead > tr > th) {
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  padding: 16px 12px;
+}
+
+.modernTableCard :global(.ant-table-tbody > tr > td) {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 16px 12px;
+}
+
+.modernTableCard :global(.ant-table-tbody > tr:last-child > td) {
+  border-bottom: none !important;
+}
+
+.modernTableCard :global(.ant-table-tbody > tr:hover > td) {
+  background-color: #ffffff !important;
+}
+
+/* Dynamic table width based on column count */
+.modernTableCard {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.modernTableCard :global(.ant-table) {
+  width: auto;
+  min-width: 100%;
+}
+
+.modernTableCard :global(.ant-table-thead > tr > th),
+.modernTableCard :global(.ant-table-tbody > tr > td) {
+  white-space: nowrap;
+}
+
+/* Dynamic width based on column count */
+.modernTableCard.twoColumns :global(.ant-table) {
+  width: 400px;
+}
+
+.modernTableCard.threeColumns :global(.ant-table) {
+  width: 600px;
+}
+
+.modernTableCard.fourColumns :global(.ant-table) {
+  width: 800px;
+}
+
+.modernTableCard.fiveColumns :global(.ant-table) {
+  width: 1000px;
+}
+
+.modernTableCard.sixColumns :global(.ant-table) {
+  width: 1200px;
+}
+
+.modernTableCard.sevenColumns :global(.ant-table) {
+  width: 1400px;
+}
+
+.modernTableCard.eightColumns :global(.ant-table) {
+  width: 1600px;
+}
+
+/* For tables with more than 8 columns, use auto width with scrolling */
+.modernTableCard.manyColumns :global(.ant-table) {
+  width: auto;
+  min-width: 100%;
+}
+
+.percentCell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.unitsSection {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ant-color-border-secondary);
+  text-align: center;
+}
+
+.unitsText {
+  font-size: 12px;
+  color: var(--ant-color-text-secondary);
+  font-style: italic;
+}
+
+.paragraphSection {
+  margin-top: 16px;
+}
+
+.paragraphCard {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--ant-color-border-secondary);
+  background-color: var(--ant-color-bg-container);
+}
+
+.paragraphContent {
+  padding: 4px 0;
+}
+
+.sectionTitle {
+  margin: 0 0 8px 0 !important;
+  color: var(--ant-color-text);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.sectionContent {
+  margin: 0 !important;
+  color: var(--ant-color-text);
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.contentLine {
+  margin-bottom: 8px;
+  color: var(--ant-color-text);
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.contentLine:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .combinedDataContainer {
+    margin: 0px 0px 12px 0;
+  }
+  
+  .dataTable :global(.ant-table-thead > tr > th),
+  .dataTable :global(.ant-table-tbody > tr > td) {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .title {
+    font-size: 16px !important;
+  }
+  
+  .sectionTitle {
+    font-size: 13px !important;
+  }
+  
+  .sectionContent {
+    font-size: 12px;
+  }
+}
+
+/* Summary Card Styles */
+.summaryCard {
+  background: #f8f9fc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summaryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.summaryTitle {
+  margin: 0 !important;
+  color: #343a40;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.summaryList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summaryItem {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  color: #343a40;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.summaryItem:last-child {
+  margin-bottom: 0;
+}
+
+.summaryItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  background-color: #4285f4;
+  border-radius: 50%;
+}
+
+/* Multi-Metric Dashboard Styles */
+.multiMetricDashboard {
+  margin-bottom: 24px;
+}
+
+.dashboardHeader {
+  margin-bottom: 20px;
+}
+
+.dashboardTitle {
+  margin: 0 0 8px 0 !important;
+  color: #343a40;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.dashboardDescription {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.metricCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.metricName {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.metricTrend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.metricTrend.up {
+  color: #10b981;
+}
+
+.metricTrend.down {
+  color: #ef4444;
+}
+
+.metricTrend.neutral {
+  color: #6b7280;
+}
+
+.trendIcon {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.trendText {
+  font-size: 14px;
+}
+
+/* Single Key Metric Styles */
+.singleKeyMetric {
+  margin-bottom: 24px;
+}
+
+.keyMetricHeader {
+  margin-bottom: 20px;
+}
+
+.keyMetricTitle {
+  margin: 0 0 8px 0 !important;
+  color: #343a40;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.keyMetricDescription {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.keyMetricCard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.keyMetricIcon {
+  flex-shrink: 0;
+}
+
+.keyMetricContent {
+  flex: 1;
+}
+
+.keyMetricName {
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.keyMetricValue {
+  color: #343a40;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.keyMetricTrend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.keyMetricTrend.up {
+  color: #10b981;
+}
+
+.keyMetricTrend.down {
+  color: #ef4444;
+}
+
+.keyMetricTrend.neutral {
+  color: #6b7280;
+}
+
+/* Thought Section */
+.thoughtContainer {
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.thoughtHeader {
+  padding: 6px 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.thoughtHeader:hover {
+  background: #f3f4f6;
+}
+
+.thoughtText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  align-items: center;
+}
+
+.chevronIcon {
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.thoughtContent {
+  padding: 16px;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .metricCard {
+    padding: 16px;
+  }
+  
+  .metricValue {
+    font-size: 20px;
+  }
+  
+  .keyMetricCard {
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .keyMetricValue {
+    font-size: 28px;
+  }
+}
+
