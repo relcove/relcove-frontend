@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Card, Typography, Space } from 'antd';
-import { TrendingDown, TrendingUp, Minus, ChevronDown, ChevronRight } from 'lucide-react';
+import { TrendingDown, TrendingUp, Minus, ChevronDown, ChevronRight, TableIcon, LineChart } from 'lucide-react';
 import { theme } from 'antd';
 import GeneralTable from './GeneralTable';
 import { formatCurrency, formatNumericCurrency, parseFormattedText } from '../utils/currency';
 import styles from '../styles/CombinedDataRenderer.module.css';
+import { ResponsiveContainer, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const { Title, Text, Paragraph } = Typography;
 const { useToken } = theme;
@@ -69,6 +70,85 @@ const CombinedDataRenderer = ({ data }) => {
       // For values less than 1000, just show the number with commas
       return `${sign}₹${absNum.toLocaleString()}`;
     }
+  };
+
+  // Line Chart Component with legend toggle
+  const LineChartCard = ({ chartData }) => {
+    const { token } = useToken();
+    const { labels = [], datasets = [], title, options = {} } = chartData || {};
+    const [hiddenLines, setHiddenLines] = useState({});
+
+    const combinedData = labels.map((label, idx) => {
+      const point = { label };
+      datasets.forEach(ds => {
+        point[ds.name] = Array.isArray(ds.data) ? (ds.data[idx] ?? null) : null;
+      });
+      return point;
+    });
+
+    const yTickFormatter = (val) => {
+      if (val == null || isNaN(val)) return '';
+      const abs = Math.abs(val);
+      if (abs >= 1_000_000_000) return `${(val / 1_000_000_000).toFixed(1)}B`;
+      if (abs >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}M`;
+      if (abs >= 1_000) return `${(val / 1_000).toFixed(1)}K`;
+      return Number(val).toLocaleString();
+    };
+
+    // Better color palette
+    const colorPalette = ['#6366f1', '#22c55e', '#f59e0b', '#06b6d4', '#ef4444', '#8b5cf6', '#ec4899'];
+
+    const handleLegendClick = (e) => {
+      const dataKey = e.dataKey || e.value;
+      if (dataKey) {
+        setHiddenLines(prev => ({
+          ...prev,
+          [dataKey]: !prev[dataKey]
+        }));
+      }
+    };
+
+    return (
+      <div className={styles.modernTableCard}>
+        {title && (
+          <div className={styles.tableHeader}>
+            <div className={styles.tableTitle}>
+              <LineChart color={token.colorPrimary}/>
+              <Title level={5} className={styles.tableTitleText}>
+                {title}
+              </Title>
+            </div>
+          </div>
+        )}
+        <div style={{ width: '90%', height: 300, margin: '10px auto', padding: '10px 0' }}>
+          <ResponsiveContainer>
+            <RechartsLineChart data={combinedData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="label" tick={{ fill: '#6b7280' }} axisLine={{ stroke: '#e5e7eb' }} tickLine={false} />
+              <YAxis tickFormatter={yTickFormatter} tick={{ fill: '#6b7280' }} axisLine={{ stroke: '#e5e7eb' }} tickLine={false} />
+              <Tooltip formatter={(val) => (val == null ? '-' : Number(val).toLocaleString())} />
+              <Legend onClick={handleLegendClick} />
+              {datasets.map((ds, idx) => (
+                <Line
+                  key={ds.name}
+                  type="monotone"
+                  dataKey={ds.name}
+                  stroke={ds.color || colorPalette[idx % colorPalette.length]}
+                  strokeWidth={3}
+                  connectNulls
+                  hide={hiddenLines[ds.name]}
+                />
+              ))}
+            </RechartsLineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    );
+  };
+
+  // Build and render a line chart from provided structure
+  const renderLineChart = (chartData) => {
+    return <LineChartCard chartData={chartData} />;
   };
 
   // Helper function to get CSS class based on column count
@@ -275,14 +355,7 @@ const CombinedDataRenderer = ({ data }) => {
       <div className={`${styles.modernTableCard} ${getColumnClass(tableData.headers.length)}`}>
         <div className={styles.tableHeader}>
           <div className={styles.tableTitle}>
-            <div className={styles.tableIcon}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <rect x="2" y="2" width="5" height="5" rx="1" fill="#3b82f6"/>
-                <rect x="9" y="2" width="5" height="5" rx="1" fill="#3b82f6"/>
-                <rect x="2" y="9" width="5" height="5" rx="1" fill="#3b82f6"/>
-                <rect x="9" y="9" width="5" height="5" rx="1" fill="#3b82f6"/>
-              </svg>
-            </div>
+              <TableIcon color={token.colorPrimary}/>
             <Title level={5} className={styles.tableTitleText}>
               {tableData.title || 'Data Table'}
             </Title>
@@ -303,6 +376,8 @@ const CombinedDataRenderer = ({ data }) => {
   // Render individual data item based on type
   const renderDataItem = (item) => {
     switch (item.type) {
+      case 'line-chart':
+        return renderLineChart(item);
       case 'thought':
         return <ThoughtSection item={item}/>;
       
