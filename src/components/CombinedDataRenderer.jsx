@@ -372,7 +372,7 @@ const CombinedDataRenderer = ({ data }) => {
                   <div className={styles.metricName}>{metric.name}</div>
                   <div className={styles.metricValue}>
                     {metric.type === 'amount' ? formatShortCurrency(metric.value) : 
-                     metric.type === 'percentage' ? `${metric.value}%` : 
+                     (metric.type === 'percentage' || metric.type === 'percent') ? `${metric.value}%` : 
                      metric.value.toLocaleString()}
                   </div>
                   {metric.trend && metric.trend_direction && (
@@ -409,7 +409,7 @@ const CombinedDataRenderer = ({ data }) => {
                 <div className={styles.keyMetricName}>{item.metric.name}</div>
                 <div className={styles.keyMetricValue}>
                   {item.metric.type === 'amount' ? formatShortCurrency(item.metric.value) : 
-                   item.metric.type === 'percentage' ? `${item.metric.value}%` : 
+                   (item.metric.type === 'percentage' || item.metric.type === 'percent') ? `${item.metric.value}%` : 
                    item.metric.value.toLocaleString()}
                 </div>
                 {item.metric.trend && item.metric.trend_direction && (
